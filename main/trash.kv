@@ -1,0 +1,54 @@
+#:kivy 1.0.9
+
+<Cracker>:
+    size: 100, 100
+    canvas:
+        Ellipse:
+            pos: self.pos
+            size: self.size
+
+<TrashCan>:
+    size: 200, 25
+    canvas:
+        Rectangle:
+            pos:self.pos
+            size:self.size
+
+<Button>
+    size: 200, 25
+    canvas:
+        Rectangle:
+            pos:self.pos
+            size:self.size
+
+<TrashGame>:
+    ball: pong_ball
+    player1: player_left
+
+    Label:
+        font_size: 70
+        center_x: root.width / 15
+        top: root.top
+        text: str(root.player1.score)
+
+    Cracker:
+        id: pong_ball
+        center: self.parent.center
+
+    TrashCan:
+        id: player_left
+        x: root.center_y
+        y: 0
+
+    #Button:
+       # font_size: 14
+      #  center_x: root.width / 2
+       # top: root.top - 150
+       # text: root.hello_world
+       # on_press: root.button_pressed()
+
+   # Label:
+       # font_size: 40
+       # center_x: root.width / 2
+      #  top: root.top - 5
+       # text: root.hello_world
