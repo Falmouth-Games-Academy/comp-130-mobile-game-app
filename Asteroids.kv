@@ -1,21 +1,58 @@
 #:kivy 1.0.9
 
-<AsteroidsGame>:
-    canvas:
-        #Rectangle:
-          #  pos: self.center_x-5, 0
-          #  size: 10, self.height
-    Button:
-        font_size: 14
-        center_x: root.width / 2
-        top: root.top - 150
-        text: root.hello_world
-        on_press: root.button_pressed()
+<Button>:
+    font_size: 20
+    color: 244,244,244,1
+    size: 150,100
 
 
-    Label:
-        font_size: 40
-        center_x: root.width / 2
-        top: root.top - 5
-        text: root.hello_world
+MyScreenManager:
+    StartScreen:
+    Game:
+<StartScreen>:
+    name: 'StartScreen'
+    FloatLayout:
 
+        Button:
+            text: "High Scores"
+            on_press: root.button_pressed()
+        #   pos: root.x, root.top - self.height
+       #    center_x: root.width /4
+       #    center_y: root.height /4
+
+            size_hint: 0.3, 0.2
+            pos_hint: {"x": 0.4, "top":1}
+        Button:
+            text: "play"
+            on_release: app.root.current = "Game"
+            size_hint: 0.3, 0.2
+            pos_hint: {"x": 0.4, "top": 0.8}
+
+
+
+        Label:
+        #    font_size: 15
+        #    center_x: root.width / 2
+        #    top: root.top - 400
+            text: root.hello_world
+    #        text_size: self.size
+            size_hint: 0.3, 0.2
+            pos_hint: {"x": 0.4, "top":0.6}
+     #       canvas:
+    #            Color:
+     #               rgba: 1, 0, 0, 0.1
+      #          Rectangle:
+       #             size: self.size
+        #            pos: self.pos
+
+        BoxLayout:
+            orientation: 'horizontal'
+            TextInput:
+                id: username_input
+                font_size: 14
+                text: ''
+                size_hint: 0.3, 0.08
+                pos_hint: {"x": 0.4, "top":0.3}
+                multiline: False
+                focus: True
+         #       on_enter: root.on_enter(self.text)
