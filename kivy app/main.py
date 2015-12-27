@@ -4,9 +4,17 @@ from kivy.properties import NumericProperty, ReferenceListProperty,\
     ObjectProperty
 from kivy.vector import Vector
 from kivy.clock import Clock
+from kivy.uix.popup import Popup
+from kivy.uix.label import Label
+
+import time
 
 # PongPaddle will become the player controlled object
 # PongBall will become the trucks
+
+popup = Popup(title='Welcome',
+    content=Label(text='Instructions'),
+    size_hint=(None, None), size=(400, 400))
 
 
 class PongPaddle(Widget):
@@ -33,7 +41,7 @@ class PongBall(Widget):
 class PongGame(Widget):
     ball = ObjectProperty(None)
     player1 = ObjectProperty(None)
-    player2 = ObjectProperty(None)
+    #player2 = ObjectProperty(None)
 
     def serve_ball(self, vel=(4, 0)):
         self.ball.center = self.center
@@ -44,11 +52,11 @@ class PongGame(Widget):
 
         # bounce of paddles
         self.player1.bounce_ball(self.ball)
-        self.player2.bounce_ball(self.ball)
+        #self.player2.bounce_ball(self.ball)
 
         # bounce ball off bottom or top
-        if (self.ball.y < self.y) or (self.ball.top > self.top):
-            self.ball.velocity_y *= -1
+        # if (self.ball.y < self.y) or (self.ball.top > self.top):
+          #  self.ball.velocity_y *= -1
 
         """#went of to a side to score point?
         if self.ball.x < self.x:
@@ -59,25 +67,31 @@ class PongGame(Widget):
             self.serve_ball(vel=(-4, 0))"""
 
     def on_touch_move(self, touch):
+        """ This function movies the player controlled object when the object is """
         # moves player1 forwards
         if touch.x > self.player1.center_x:
-            self.player1.center_x += 50
+            self.player1.center_x += 75
+            time.sleep(0.1)
         # moves player left
         if touch.y > self.player1.y:
-            self.player1.center_y += 50
+            self.player1.center_y += 75
+            time.sleep(0.1)
         # moves player right
         if touch.y < self.player1.y:
-            self.player1.center_y += -50
+            self.player1.center_y += -75
+            time.sleep(0.1)
         # Don't want player to be able to move back
 
 
-class PongApp(App):
+class COMP130App(App):
     def build(self):
+        popup.open()
         game = PongGame()
         # game.serve_ball()
         Clock.schedule_interval(game.update, 1.0 / 60.0)
+        #popup.open()
         return game
 
 
 if __name__ == '__main__':
-    PongApp().run()
+    COMP130App().run()
