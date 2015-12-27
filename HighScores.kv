@@ -1,5 +1,6 @@
 #:kivy 1.0.9
-#: import FadeTransition kivy.uix.screenmanager.FadeTransition
+#:import vertex_instructions kivy.graphics.vertex_instructions
+
 
 
 
@@ -12,9 +13,21 @@
         size_hint: 0.1, 0.05
         pos_hint: {"x": 0, "top": 1}
 
+    Button:
+     #   on_release: root.anim_to_pos()
+        text: "reset"
+        font_size: 20
+        size_hint: 0.1, 0.05
+        pos_hint: {"x": 0.8, "top": 1}
+
+    Asteroid:
+        size_hint: None, None
+        canvas:
+            Rectangle:
+                size: self.size
+                pos: self.pos
 
 
-
-
+<Asteroid>:
 
 

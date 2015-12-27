@@ -1,4 +1,5 @@
 #:kivy 1.0.9
+#: import FadeTransition kivy.uix.screenmanager.FadeTransition
 
 <Button>:
     font_size: 20
@@ -7,12 +8,13 @@
 
 
 MyScreenManager:
+    transition: FadeTransition()
     StartScreen:
     Game:
+
 <StartScreen>:
     name: 'StartScreen'
     FloatLayout:
-
         Button:
             text: "High Scores"
             on_press: root.button_pressed()
@@ -43,16 +45,19 @@ MyScreenManager:
             font_size: 20
             size_hint: 0.3, 0.2
             pos_hint: {"x":0.13, "y": 0.13}
+
+
         TextInput:
-            id: username_input
+            #id: username_input
             font_size: 14
-            text: 'name'
+            text: 'Name'
             size_hint: 0.3, 0.08
             pos_hint: {"x": 0.4, "top":0.3}
             size_hint_y: None
             multiline: False
             focus: True
             on_text: root.on_text(self.text)
+            on_text_validate: root.on_text(self.text)
 
             #Further work needed for database names and scores
 #        Label:
