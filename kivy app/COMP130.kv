@@ -1,14 +1,14 @@
 #:kivy 1.0.9
 
 <PongBall>:
-    size: 50, 50
+    size: 50, 75
     canvas:
         Ellipse:
             pos: self.pos
             size: self.size
 
 <PongPaddle>:
-    size: 75, 75
+    size: 50, 50
     canvas:
         Rectangle:
             pos:self.pos
@@ -30,12 +30,14 @@
     PongBall:
         id: pong_ball
         center_x: 10
-        center_y: 10
+        center_y: 50
 
     PongPaddle:
         id: player_left
-        x: root.x
-        center_y: root.center_y
+        # x: root.x
+        y: root.y
+        # center_y: root.center_y
+        center_x: root.center_x
 
     #PongPaddle:
       #  id: player_right
