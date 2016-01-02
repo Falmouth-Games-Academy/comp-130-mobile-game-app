@@ -14,8 +14,9 @@ from random import randrange, choice
 from kivy.config import Config
 Config.set('graphics', 'resizable', '0')
 Config.set('graphics', 'width', '480')
-Config.set('graphics', 'height', '640')  # Fixed window size for now
+Config.set('graphics', 'height', '640')
 
+""" MAIN.PY BEFORE ADDING TRUCKS ARRAY"""
 
 """Adapted from the kivy pong tutorial. The pong paddle is now the object controlled by the player.
    The pong ball will be duplicated and become the trucks."""
@@ -23,7 +24,6 @@ Config.set('graphics', 'height', '640')  # Fixed window size for now
 
 popup = Popup(title='Welcome', content=Label(text='Instructions'), size_hint=(None, None), size=(400, 400))
 root = Widget()
-# Try and use pages have s star page, a running page and a high score page?
 
 
 class PongPaddle(Widget):
@@ -62,16 +62,6 @@ class PongGame(Widget):
         self.ball.center = self.center
         self.ball.velocity = vel"""
 
-    def create_trucks(self):
-        truck_number = 10
-        global trucks_array   # The variable stars is global so it can be used in other functions
-        trucks_array = []
-        for i in range(truck_number):
-            # Each truck has an X coord, a Y coord and will add speed
-            truck = [randrange(0, screen.get_width() - 1), randrange(0, screen.get_height() - 1)]
-            trucks_array.append(star)
-
-
     def update(self, dt):
         self.ball.move()
         # bounce off paddles
@@ -82,8 +72,8 @@ class PongGame(Widget):
             self.player1.score += 1
             self.serve_ball(vel=(-4, 0))"""
 
-    # def end_game(self):
-        # self.disabled =
+    def end_game(self):
+        popup.open()
 
     def on_touch_move(self, touch):
         """ This function movies the player controlled object when the object is touched """
