@@ -1,24 +1,22 @@
 #:kivy 1.0.9
 
-<PongBall>:
+<Trucks>:
     size: 100, 50
     canvas:
         Rectangle:
             pos: self.pos
             size: self.size
 
-<PongPaddle>:
+<PlayerObject>:
     size: 50, 50
     canvas:
         Ellipse:
             pos:self.pos
             size:self.size
 
-<PongGame>:
-    ball: pong_ball
-    player1: player_left
-    #player2: player_right
-    #timer: timer
+<TheGame>:
+    ball: the_truck
+    player1: player
 
 
     Label:
@@ -27,16 +25,16 @@
         top: root.top
         text: str(root.player1.score)
 
-
-    PongBall:
-        id: pong_ball
-        center_x: int(root.truck[1])
+    Trucks:
+        id: the_truck
+        center_x: 100
         center_y: 100
 
-    PongPaddle:
-        id: player_left
+    PlayerObject:
+        id: player
         # x: root.x
         y: root.y
         # center_y: root.center_y
         center_x: root.center_x
+
 
