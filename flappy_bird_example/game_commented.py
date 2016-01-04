@@ -1,3 +1,5 @@
+#tutorial and guidance from Richard Jones - Introduction to game programming with Kivy - PyCon 2015 
+#https://www.youtube.com/watch?v=U14P8gtjQmU
 # import all these things so that the .pv file can access them
 
 import random # import random allows for random generation of values
