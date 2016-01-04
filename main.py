@@ -23,6 +23,7 @@ import cgitb
 cgitb.enable()
 
 
+
 class StartScreen(Screen):
 
 
@@ -56,17 +57,19 @@ class StartScreen(Screen):
 class Game(Screen, Widget):
     pass
 
+
+
 class Asteroid(Widget):
-    #velocity = ListProperty([1,1])
+
+
 
     # def __init__(self, **kwargs):
-    #     super(Asteroid, self).__init__(**kwargs)
-    #     Clock.schedule_interval(self.anim_to_pos, 1/60.)
-    #
-    #
-    # def update(self, *args):
-    #     pass
+    #       super(Asteroid, self).__init__(**kwargs)
+    #       Clock.schedule_interval(self.anim_to_pos, 1/60.)
 
+
+    # def update(self, *args):
+    #
     #
     #     self.x += self.velocity[0]
     #     self.y += self.velocity[1]
@@ -76,42 +79,30 @@ class Asteroid(Widget):
     #         self.velocity[0] *= -1
     #     if self.y < (self.x + self.height) > Window.height:
     #         self.velocity[1] *= -1
-    #
-    x_touch = 1
-    y_touch = 1
 
 
-    def anim_to_pos(self, xtouch, ytouch):
-        Animation.cancel_all(self)
-        random_x = random() * (Window.width - 100)
-        random_y = random() * (Window.height - 100)
-
-        #print(random_x, random_y, Window.width - self.width)
-
-        anim = Animation(x=xtouch, y=ytouch, duration=1, t='out_elastic')
-        print(self.x_touch, self.y_touch)
-        anim.start(self)
-
-
-
+    xtouch = NumericProperty(0)
+    ytouch = NumericProperty(0)
 
     def on_touch_down(self, touch):
-        self.x_touch, self.y_touch = touch.pos
-        xtouch = self.x_touch
-        ytouch = self.y_touch
-
-        #
-        # with self.canvas:
-        #     touch.ud["Rectangle"] = Rectangle(pos=(touch.x, touch.y))
-        #
+        xtouch = touch.x
+        ytouch = touch.y
+        print(xtouch,ytouch)
 
 
         if self.collide_point(*touch.pos):
-            self.anim_to_pos(xtouch, ytouch)
+            Animation.cancel_all(self)
+            anim = Animation(x=touch.x, y=touch.y, duration=1, t='out_elastic')
+            print(xtouch, ytouch)
+            anim.start(self)
+            return anim
 
 
 
 
+class Ship(Widget):
+
+    pass
 
 
 
@@ -127,7 +118,10 @@ Asteroidspresentation = Builder.load_file("Asteroids.kv")
 
 class Asteroids(App):
     def build(self):
-        return Asteroidspresentation
+        game = Asteroidspresentation
+        asteroid = HSpresentation
+
+        return game
 
 
 
