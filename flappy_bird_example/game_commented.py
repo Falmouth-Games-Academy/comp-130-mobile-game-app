@@ -174,6 +174,7 @@ class Game(Widget):
         self.ground.update()
         self.pipes.update(dt)
 
+        #I'm trying to get the bird's speed to be 0 when it hits the ground instead of endings the game
         if self.bird.collide_widget(self.ground):
             self.game_over = True
 
