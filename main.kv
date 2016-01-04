@@ -1,0 +1,79 @@
+#:kivy 1.9.0
+
+#:import FadeTransition kivy.uix.screenmanager.FadeTransition
+#:import RiseInTransition kivy.uix.screenmanager.RiseInTransition
+#:import FallOutTransition kivy.uix.screenmanager.FallOutTransition
+
+<MenuScreen>:
+    BoxLayout:
+        orientation: 'vertical'
+        padding: '10dp'
+        BoxLayout:
+            padding: '100dp'
+            Button:
+                background_normal: 'images\image.jpg'
+                text: 'BATTLE'
+                on_press:
+                    root.manager.transition = RiseInTransition()
+                    root.manager.current = 'battle'
+        BoxLayout:
+            padding: '100dp'
+            Button:
+                text: 'Quit'
+
+<BattleScreen>:
+    BoxLayout:
+        orientation: 'vertical'
+        padding: '10dp'
+        BoxLayout:
+            padding: '10dp'
+            size_hint_y: 75
+            Image:
+                allow_stretch: True
+                keep_ratio: False
+                size_hint_x: 50
+                source: 'images\image.jpg'
+            BoxLayout:
+                size_hint_x: 50
+                padding: '20dp'
+                Label:
+                    text_size: self.size
+                    halign: 'left'
+                    valign: 'top'
+                    text: root.make_stat_text('Monster:')
+                Label:
+                    text_size: self.size
+                    halign: 'left'
+                    valign: 'top'
+                    text: root.make_stat_text('Player:')
+
+        BoxLayout:
+            size_hint_y: 25
+            Button:
+                size_hint_x: 25
+                text: 'Hit'
+                on_press: app.play_sound1()
+            BoxLayout:
+                orientation: 'vertical'
+                size_hint_x: 33
+                Button:
+                    size_hint_y: 50
+                Button:
+                    size_hint_y: 50
+            BoxLayout:
+                orientation: 'vertical'
+                size_hint_x: 33
+                Button:
+                    size_hint_y: 50
+                Button:
+                    size_hint_y: 50
+            BoxLayout:
+                orientation: 'vertical'
+                size_hint_x: 33
+                Button:
+                    size_hint_y: 50
+                Button:
+                    size_hint_y: 50
+                    on_press:
+                        root.manager.transition = FallOutTransition()
+                        root.manager.current = 'menu'
