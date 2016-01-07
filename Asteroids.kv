@@ -8,13 +8,14 @@
 
 
 MyScreenManager:
-    transition: FadeTransition()
+    #transition: FadeTransition()
     StartScreen:
     Game:
 
 <StartScreen>:
     name: 'StartScreen'
-    FloatLayout:
+    BoxLayout:
+        orientation: 'vertical'
         Button:
             text: "High Scores"
             on_press: root.button_pressed()
@@ -29,7 +30,6 @@ MyScreenManager:
             on_release: app.root.current = "Game"
             size_hint: 0.3, 0.2
             pos_hint: {"x": 0.4, "top": 0.8}
-
 
 
         Label:
@@ -60,19 +60,19 @@ MyScreenManager:
             on_text_validate: root.on_text(self.text)
 
             #Further work needed for database names and scores
-#        Label:
-#            text: 'Last Name'
-#            font_size: 20
-#        TextInput:
-#            id: username_input
-#            font_size: 14
-#            text: 'name'
-#            size_hint: 0.3, 0.08
-#            pos_hint: {"x": 0.4, "top":0.3}
-#            size_hint_y: None
-#            multiline: False
-#            focus: True
-#            on_text_validate: root.on_text(self.text)
+        Label:
+            text: 'Last Name'
+            font_size: 20
+        TextInput:
+            id: username_input
+            font_size: 14
+            text: 'name'
+            size_hint: 0.3, 0.08
+            pos_hint: {"x": 0.4, "top":0.3}
+            size_hint_y: None
+            multiline: False
+            focus: True
+            on_text_validate: root.on_text(self.text)
 
 
 

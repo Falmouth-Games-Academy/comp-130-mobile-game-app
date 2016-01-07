@@ -52,35 +52,32 @@ class StartScreen(Screen):
 
 
 
+class Asteroid(Widget):
+    velocity_x = NumericProperty(0)
+    velocity_y = NumericProperty(0)
+    velocity = ReferenceListProperty(velocity_x, velocity_y)
 
+    def move(self):
+        self.pos = Vector(*self.velocity) + self.pos
 
 class Game(Screen, Widget):
-    pass
+    ball = ObjectProperty(None)
+
+
+    def serve_ball(self, vel=(4, 0)):
+        self.ball.center = self.center
+        self.ball.velocity = vel
+
+    def update(self, dt):
+        self.ball.move()
+        if (self.ball.y < self.y) or (self.ball.top > self.top):
+            self.ball.velocity_y *= -1
 
 
 
-class Asteroid(Widget):
 
 
-
-    # def __init__(self, **kwargs):
-    #       super(Asteroid, self).__init__(**kwargs)
-    #       Clock.schedule_interval(self.anim_to_pos, 1/60.)
-
-
-    # def update(self, *args):
-    #
-    #
-    #     self.x += self.velocity[0]
-    #     self.y += self.velocity[1]
-    #
-    #
-    #     if self.x < (self.x + self.width) > Window.width:
-    #         self.velocity[0] *= -1
-    #     if self.y < (self.x + self.height) > Window.height:
-    #         self.velocity[1] *= -1
-
-
+class Ship(Widget):
     xtouch = NumericProperty(0)
     ytouch = NumericProperty(0)
 
@@ -89,20 +86,13 @@ class Asteroid(Widget):
         ytouch = touch.y
         print(xtouch,ytouch)
 
-
-        if self.collide_point(*touch.pos):
-            Animation.cancel_all(self)
-            anim = Animation(x=touch.x, y=touch.y, duration=1, t='out_elastic')
-            print(xtouch, ytouch)
-            anim.start(self)
-            return anim
+        Animation.cancel_all(self)
+        anim = Animation(x=xtouch, y=ytouch, duration=1, t='out_sine')
+        print(xtouch, ytouch)
+        anim.start(self)
+        return anim
 
 
-
-
-class Ship(Widget):
-
-    pass
 
 
 
@@ -120,7 +110,8 @@ class Asteroids(App):
     def build(self):
         game = Asteroidspresentation
         asteroid = HSpresentation
-
+        #Game.serve_ball(self)
+        #Clock.schedule_interval(Game.update, 1 / 60.0)
         return game
 
 
