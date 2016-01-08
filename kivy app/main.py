@@ -26,39 +26,26 @@ Config.set('graphics', 'height', '640')  # Fixed window size for now
 # End game function
 # Add timer, score change based on time taken
 
-popup = Popup(title='Welcome', content=Label(text='Instructions'), size_hint=(None, None), size=(400, 400))
-root = Widget()
+popup = Popup(title='Welcome', content=Label(text='Instructions'), size_hint=(None, None), size=(400, 300))
+#root = Widget()
 # Try and use pages have start page, a running page and a high score page
 
 
 class PlayerObject(Widget):
     """ Planning to move PlayerObject into another file and import    """
     score = NumericProperty(0)
+    lives = NumericProperty(3)
 
     def bounce_ball(self, ball):
         if self.collide_widget(ball):
-            popup.open()
-            """vx, vy = ball.velocity
-            offset = (ball.center_y - self.center_y) / (self.height / 2)
-            bounced = Vector(-1 * vx, vy)
-            vel = bounced * 1.1
-            ball.velocity = vel.x, vel.y + offset"""
+            self.lives -= 1
+
 
 
 class Trucks(Widget):
     # velocity_x = NumericProperty(0)
     # velocity_y = NumericProperty(0)
     # velocity = ReferenceListProperty(velocity_x, velocity_y)
-
-    def create_trucks(self):    #Might move into TheGame and generate instances of Trucks
-        truck_number = 10
-        global trucks_array
-        trucks_array = []
-        for i in range(truck_number):
-            # Each truck has an X coord, a Y coord and will add speed
-            truck = [randrange(0, TheGame.width), randrange(0, TheGame.height)]
-            print TheGame.width
-            trucks_array.append(truck)
 
     def move(self):
         if self.center_x > 480:
@@ -70,20 +57,12 @@ class Trucks(Widget):
 class TheGame(Widget):
     the_truck = ObjectProperty(None)
     player1 = ObjectProperty(None)
-    timer = ObjectProperty(None)
-
-    """def serve_ball(self, vel=(4, 0)):
-        self.ball.center = self.center
-        self.ball.velocity = vel"""
+    timer = NumericProperty(30)
 
     def update(self, dt):
         self.ball.move()
         # bounce off paddles
         self.player1.bounce_ball(self.ball)
-
-    def end_game(self):
-        print "END"
-        # go back to leader board page
 
     def on_touch_move(self, touch):
         """ This function moves the player controlled object when the object is touched """

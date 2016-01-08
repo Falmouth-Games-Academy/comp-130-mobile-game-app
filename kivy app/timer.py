@@ -14,4 +14,4 @@ class TimerApp:
 
 
 if __name__ == '__main__':
-    timerApp(10)
+    TimerApp(10)
