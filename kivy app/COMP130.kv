@@ -15,15 +15,15 @@
             size:self.size
 
 <TheGame>:
-    ball: the_truck
-    player1: player
+    truck: truck
+    player: player
 
 
     Label:
         font_size: 70
         center_x: (3*(root.width)) / 4
         top: root.top
-        text: str(root.player1.score)
+        text: str(root.player.score)
 
 
     Label:
@@ -36,7 +36,7 @@
         font_size: 70
         center_x: root.width / 4
         top: root.top
-        text: str(root.player1.lives)
+        text: str(root.player.lives)
 
     Label:
         font_size: 20
@@ -44,16 +44,10 @@
         center_y: root.top -10
         text: "Lives:"
 
-    Label:
-        font_size: 70
-        center_x: root.width / 2
-        top: root.top -40
-        text: str(root.timer)
-
     Trucks:
-        id: the_truck
-        center_x: 100
-        center_y: 100
+        id: truck
+        center_x: -100
+        #center_y: root.truck.y_coord
 
     PlayerObject:
         id: player
