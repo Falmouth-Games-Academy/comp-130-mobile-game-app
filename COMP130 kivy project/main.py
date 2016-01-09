@@ -27,8 +27,27 @@ class TheScreenManager(ScreenManager):
     pass
 
 class Monster(Widget):
+    xtouch = NumericProperty(0)
+    ytouch = NumericProperty(0)
+
     def on_touch_down(self, touch):
-        super(Monster, self).on_touch_down(touch)
+        #super(Monster, self).on_touch_down(touch)
+        xtouch = touch.x
+        ytouch = touch.y
+        movex = NumericProperty(0)
+        movey = NumericProperty(0)
+        if xtouch >= self.Monster.center_x:
+            movex = movex + 10
+
+
+        print(xtouch, ytouch)
+
+        Animation.cancel_all(self)
+        anim = Animation(x = movex,y = movey , duration = 1, t = 'out_sine')
+        print(xtouch,ytouch)
+        anim.start(self)
+        return anim
+
 
 snakeGameKivy = Builder.load_file("snake.kv")
 class snakeApp(App):
