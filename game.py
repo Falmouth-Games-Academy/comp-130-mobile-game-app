@@ -6,7 +6,7 @@ from kivy.vector import Vector
 from kivy.clock import Clock
 
 class PongPaddle(Widget):
-    insectLives = NumericProperty(50)
+    insectLives = NumericProperty(20)
     lives = NumericProperty(3)
     def bounce_ball(self, ball):
 
@@ -14,7 +14,7 @@ class PongPaddle(Widget):
             vx, vy = ball.velocity
             offset = (ball.center_y - self.center_y) / (self.height / 2)
             bounced = Vector(-1 * vx, vy)
-            vel = bounced * 1.1
+            vel = bounced * 1.2
             ball.velocity = vel.x, vel.y + offset
 
 
@@ -51,11 +51,14 @@ class PongGame(Widget):
             self.player1.insectLives -= 1
 
 
+
         if self.ball.x > self.width:
             self.player2.lives -= 1
             self.serve_ball(vel=(+4, 0))
         #Ends game when player loses all their lives
         if self.player2.lives == 0 :
+            sys.exit()
+        if self.player1.insectLives == 0 :
             sys.exit()
 
 

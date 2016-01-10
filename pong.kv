@@ -1,8 +1,11 @@
 #:kivy 1.0.9
+<Widgets>:
 
 <PongBall>:
     size: 50, 50
     canvas:
+        Color:
+            rgba:0,1,0,1
         Ellipse:
             pos: self.pos
             size: self.size
@@ -10,6 +13,8 @@
 <PongPaddle>:
     size: 25, 200
     canvas:
+        Color:
+            rgba:1,1,0,1
         Rectangle:
             pos:self.pos
             size:self.size
@@ -18,7 +23,7 @@
     Image:
         id: image_one
         source: "Comp130KivyApp/green.jpg"
-        pos: 0,0
+        pos: self.pos
         size:800,800
 <PongGame>:
     ball: pong_ball
@@ -27,14 +32,20 @@
 
 
     canvas:
+        Color:
+            rgba:1,1,0,1
         Rectangle:
-            pos: self.center_x-5, 0
-            size: 10, self.height
+            pos: self.center_x - 400, 0
+            size: 400, self.height
+
+
+
 
     Label:
         font_size: 70
         center_x: root.width / 4
         top: root.top - 50
+
         text: str(root.player1.insectLives)
 
     Label:
@@ -44,13 +55,13 @@
         text: str(root.player2.lives)
 
     PongBall:
+
         id: pong_ball
         center: self.parent.center
 
     PongPaddle:
         id: player_left
-        x: root.x
-        center_y: root.center_y
+
 
     PongPaddle:
         id: player_right
