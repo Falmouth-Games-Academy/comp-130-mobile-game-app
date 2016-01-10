@@ -8,6 +8,7 @@ from kivy.vector import Vector
 from kivy.clock import Clock
 from kivy.uix.popup import Popup
 from kivy.uix.label import Label
+from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.gridlayout import GridLayout
 from kivy.uix.button import Button
 import time
@@ -30,15 +31,15 @@ class Trucks(Widget):
 
 
 class TheGame(Widget):
-    def the_timer(self):
-        print "hello"
+    layout = BoxLayout
+    layout.add_widget(PlayerObject)
 
 
 class COMP130App(App):
     def build(self):
         popup.open()
         game = TheGame()
-        #Clock.schedule_interval(game.update, 1.0 / 60.0)
+        Clock.schedule_interval(game.update, 1.0 / 60.0)
         return game
 
 

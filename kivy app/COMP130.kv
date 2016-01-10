@@ -39,15 +39,28 @@
         text: str(root.player.lives)
 
     Label:
+        font_size: 70
+        center_x: root.width / 2
+        top: root.top
+        text: str(root.timer)
+
+    Label:
         font_size: 20
         center_x: root.width / 4
         center_y: root.top -10
         text: "Lives:"
 
+    Label:
+        font_size: 20
+        center_x: root.width / 2
+        center_y: root.top -10
+        text: "Time left:"
+
     Trucks:
         id: truck
         center_x: -100
-        #center_y: root.truck.y_coord
+        center_y: root.truck.y_choice
+
 
     PlayerObject:
         id: player

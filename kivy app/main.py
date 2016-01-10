@@ -27,14 +27,19 @@ Config.set('graphics', 'height', '640')  # Fixed window size for now
 # Add comments
 # End game function
 # Add timer, score change based on time taken
+RUNTIME = 30
+LIVES = 3
+SCORE = 0
+
 
 popup = Popup(title='Welcome', content=Label(text='Instructions'), size_hint=(None, None), size=(400, 300))
 
 
 class PlayerObject(Widget):
-    """ Planning to move PlayerObject into another file and import    """
-    score = NumericProperty(0)
-    lives = NumericProperty(3)
+    """ PLayer controlled object
+    """
+    score = NumericProperty(SCORE)
+    lives = NumericProperty(LIVES)
 
     def truck_collision(self, truck):
         if self.collide_widget(truck):
@@ -45,9 +50,8 @@ class PlayerObject(Widget):
 
 
 class Trucks(Widget):
-    def __init__(self):
-        y_options = [100, 200, 300, 400]
-        self.center_y = random.choice(y_options)
+    y_options = [200, 300, 400]
+    y_choice = random.choice(y_options)
 
     def move(self):
         if self.center_x > 480:
@@ -64,16 +68,16 @@ class RunTime(Widget):
 class TheGame(Widget):
     truck = ObjectProperty(None)
     player = ObjectProperty(None)
-    timer = NumericProperty(30)
+    timer = NumericProperty(RUNTIME)
 
-    # def the_timer(self, timer):
-        # self.timer -= 1
+    def the_timer(self, timer):
+        self.timer -= 1
 
     def update(self, dt):
         self.truck.move()
         # bounce off paddles
         self.player.truck_collision(self.truck)
-        self.timer -= 1.0/60.0
+        self.timer -= int(1.0/60.0)
         #self.the_timer(self.timer)
 
     def end_game(self):
@@ -108,9 +112,10 @@ class TheGame(Widget):
 
 class COMP130App(App):
     def build(self):
-        popup.open()
         game = TheGame()
         Clock.schedule_interval(game.update, 1.0 / 60.0)
+        Clock.schedule_interval(game.the_timer, 1.0)
+        popup.open()
         return game
 
 
