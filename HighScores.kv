@@ -3,41 +3,61 @@
 
 <Game>:
     name: "Game"
-    Button:
-        on_release: app.root.current = "StartScreen"
-        text: "Home"
-        font_size: 20
-        size_hint: 0.1, 0.05
-        pos_hint: {"x": 0, "top": 1}
+    FloatLayout:
 
-    Button:
-        on_release: root.anim_to_pos()
-        text: "reset"
-        font_size: 20
-        size_hint: 0.1, 0.05
-        pos_hint: {"x": 0.8, "top": 1}
+        Button:
+            size_hint: 0.2, 0.1
+            pos_hint: {"x": 0, "top": 1}
+            on_press:
+                root.manager.transition.direction = 'right'
+                root.manager.current = 'StartScreen'
+            text: "Back"
+        Ship:
+    #        canvas:
+    #            Color:
+    #                rgb: 1, 1, 0
+    #            Rectangle:
+    #                pos: 100, 200
+    #                size: 100, 100
+    #            Rotate:
+    #                angle: 45
+    #                axis: 1, 0, 0
 
-    Ship:
-Asteroid:
-    id: Asteroid
-    size_hint: None, None
-    pos:200,200
-    center: self.center
-    canvas:
-        Color:
-            rgb: 0, 1, 0
-        Ellipse:
-            pos: self.pos
-            size: root.width/2, root.height/2
+
+
+
 
 
 <Ship>:
+    Button:
+        text: 'up'
+        size_hint: None, None
+        size: 50,20
+        #pos_hint: {'center_x': .5, 'center_y': .5}
+        pos: (root.x - (self.width/2)),(root.y - (self.height/2))
+        canvas.before:
+            PushMatrix
+            Rotate:
+                angle: root.degrees
+                origin: self.center
+        canvas.after:
+            PopMatrix
+    FloatLayout:
+        Label:
+            pos_hint: {"x":.5, "y":1}
+            text: "Angle: " + str(root.degrees)
 
-    size_hint: None,None
-    #size: 100,100
-    canvas:
-        Color:
-            rgb: 1, 0, 0
-        Rectangle:
-            pos: root.x - (self.width/2),root.y - (self.height/2)
-            size: root.width, root.height
+
+   #size_hint: None, None
+   #pos_hint: 0.5, 0.5
+
+    ##pos: 200, 200
+   #canvas:
+   #    Color:
+   #        rgb: 1, 0.3, 0.3
+   #    Rectangle:
+   #        pos: (root.x - (self.width/2)),(root.y - (self.height/2))
+   #        size: root.width, root.height
+   #    Rotate:
+   #        angle: 45
+   #        origin: self.center
