@@ -2,7 +2,7 @@
 import random
 from kivy.app import App
 from kivy.uix.widget import Widget
-from kivy.properties import NumericProperty, ReferenceListProperty,\
+from kivy.properties import NumericProperty, ListProperty, ReferenceListProperty,\
     ObjectProperty
 from kivy.vector import Vector
 from kivy.clock import Clock
@@ -12,13 +12,13 @@ from kivy.uix.button import Button
 import time
 from random import randrange, choice
 import datetime
+from kivy.uix.gridlayout import GridLayout
 from kivy.config import Config
 Config.set('graphics', 'resizable', '0')
 Config.set('graphics', 'width', '480')
 Config.set('graphics', 'height', '640')  # Fixed window size for now
 
 # TO DO LIST:
-# Looking into using Kivy pages or screens (high score page, running page?)
 # If not using pages then menu screens/high score widgets
 # Placing trucks generated in array on screen
 # Add images/sprites
@@ -26,7 +26,7 @@ Config.set('graphics', 'height', '640')  # Fixed window size for now
 # Leader board client server code
 # Add comments
 # End game function
-# Add timer, score change based on time taken
+
 RUNTIME = 30
 LIVES = 3
 SCORE = 0
@@ -50,7 +50,7 @@ class PlayerObject(Widget):
 
 
 class Trucks(Widget):
-    y_options = [200, 300, 400]
+    y_options = [100, 150, 200, 300, 400, 500]
     y_choice = random.choice(y_options)
 
     def move(self):
@@ -65,6 +65,16 @@ class RunTime(Widget):
         self.timer -= 1
 
 
+class Road(GridLayout):
+    traffic = ListProperty(())
+
+    def __init__(self, **kwargs):
+        super(Road, self).__init__(**kwargs)
+        for x in range(0, 10):
+            self.add_widget(Trucks)
+            self.traffic.append(dock)
+        #self.center_x= Window.width/Trucks
+
 class TheGame(Widget):
     truck = ObjectProperty(None)
     player = ObjectProperty(None)
@@ -77,8 +87,6 @@ class TheGame(Widget):
         self.truck.move()
         # bounce off paddles
         self.player.truck_collision(self.truck)
-        self.timer -= int(1.0/60.0)
-        #self.the_timer(self.timer)
 
     def end_game(self):
         popup.open()
