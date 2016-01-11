@@ -25,11 +25,12 @@ Config.set('graphics', 'height', '640')  # Fixed window size for now
 # Change truck speeds
 # Leader board client server code
 # Add comments
-# End game function
+# End game function - End game when timer or lives = 0
 
 RUNTIME = 30
 LIVES = 3
 SCORE = 0
+TRUCK_NUMBER = 3
 
 
 popup = Popup(title='Welcome', content=Label(text='Instructions'), size_hint=(None, None), size=(400, 300))
@@ -65,20 +66,28 @@ class RunTime(Widget):
         self.timer -= 1
 
 
-class Road(GridLayout):
+class Road(Widget):
     traffic = ListProperty(())
+    layout = GridLayout(rows=5)
 
     def __init__(self, **kwargs):
         super(Road, self).__init__(**kwargs)
-        for x in range(0, 10):
+        for t in range(0, 3):
             self.add_widget(Trucks)
-            self.traffic.append(dock)
-        #self.center_x= Window.width/Trucks
+            self.traffic.append(Trucks)
+            print (t)
+
 
 class TheGame(Widget):
     truck = ObjectProperty(None)
+    #truck = Road()
     player = ObjectProperty(None)
     timer = NumericProperty(RUNTIME)
+    #road = Road()
+
+    #def __init__(self):
+    #   road = Road()
+    #   self.add_widget(road)
 
     def the_timer(self, timer):
         self.timer -= 1
