@@ -1,20 +1,13 @@
 # Filename: main.py
 import random
+import time
 from kivy.app import App
 from kivy.uix.widget import Widget
-from kivy.properties import NumericProperty, ReferenceListProperty,\
-    ObjectProperty
+from kivy.properties import NumericProperty
 from kivy.clock import Clock
 from kivy.uix.popup import Popup
 from kivy.uix.label import Label
 from kivy.uix.button import Button
-import time
-from random import randrange, choice
-
-from kivy.config import Config
-#Config.set('graphics', 'resizable', '0')
-#Config.set('graphics', 'width', '480')
-#Config.set('graphics', 'height', '640')  # Fixed window size for now
 
 # TO DO LIST:
 # If not using pages then menu screens/high score widgets
@@ -22,11 +15,9 @@ from kivy.config import Config
 # Change truck speeds (different levels)
 # Leader board client server code
 
-
-RUNTIME = 30
+RUNTIME = 30  # maybe move & change depending on level
 LIVES = 3
 SCORE = 0
-TRUCK_SPEED = 3
 
 
 class PlayerObject(Widget):
@@ -46,7 +37,7 @@ class PlayerObject(Widget):
                 self.lives -= 1
             elif self.lives <= 0:
                 print "Game Over"
-                TheGame.end_game()
+                # TheGame.end_game()
                 # self.remove_widget(Trucks)
 
 
@@ -58,16 +49,19 @@ class Trucks(Widget):
         if self.center_x > 480:
             self.center_x = 0
         else:
-            self.center_x += TRUCK_SPEED
+            self.center_x += self.speed
 
 
 class TheGame(Widget):
-    # truck = Trucks()
     player = PlayerObject()
     timer = NumericProperty(RUNTIME)
+    level = NumericProperty(1)
+    speed = NumericProperty(0)
+
     traffic_list = []
+
     end = Label()
-    help = Button
+    help = Button()
 
     def traffic(self, traffic_list):
         """This function generates instances of the Trucks objects and adds it to traffic_list. Each instance
@@ -91,6 +85,12 @@ class TheGame(Widget):
         :return:
         """
         self.timer -= 1
+        if self.level == 1:
+            self.speed = 2
+        elif self.level == 2:
+            self.speed = 4
+        else:
+            self.speed = 50
 
     def end_game(self):
         """ When called this function removes all the Trucks instances in traffic_list and sets the label
@@ -100,6 +100,7 @@ class TheGame(Widget):
         for t in self.traffic_list:
             self.remove_widget(t)
         self.end.text = 'GAME OVER'
+        self.next_level()
 
     def help_popup(self):
         popup = Popup(title='Help', content=Label(text='Instructions'), size_hint=(None, None), size=(400, 300))
@@ -110,9 +111,19 @@ class TheGame(Widget):
             if t.center_x > 480:
                 t.center_x = 0
             else:
-                t.center_x += TRUCK_SPEED
+                t.center_x += self.speed
         # self.truck.move()
             self.player.truck_collision(t)
+
+    def next_level(self):
+        if self.level == 1:
+            self.level += 1
+            self.player.center_y = 0
+            self.traffic(self.traffic_list)
+            self.end.text = 'Next level!'
+        else:
+            print "end"
+            # Leaderboard/ server stuff
 
     def on_touch_move(self, touch):
         """ This function moves the player controlled object when the object is touched """
