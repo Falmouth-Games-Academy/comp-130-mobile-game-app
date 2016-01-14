@@ -26,12 +26,15 @@ MyScreenManager:
             on_press:
                 root.manager.transition.direction = 'left'
                 root.manager.current = 'Game'
+            #on_release:
+            #    app.Boom()
 
         Button:
             text: "View HighScores"
             on_press:
                 root.manager.transition.direction = 'right'
                 root.manager.current = 'HighScores'
+
 
 
         Label:

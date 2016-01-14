@@ -33,7 +33,7 @@ class StartScreen(Screen):
         print('The widget', self, 'have:', username_text)
         self.username_text = username_text
         return username_text
-      #  self.button_pressed.username = username_text
+
 
     textinput = TextInput()
     textinput.bind(text=on_text)
@@ -53,22 +53,19 @@ class StartScreen(Screen):
 
 
 
+
 class Asteroid_movement(Widget):
-    velocity_x = NumericProperty(0)
-    velocity_y = NumericProperty(0)
-    velocity = ReferenceListProperty(velocity_x, velocity_y)
-
-    def move(self):
-        self.pos = Vector(*self.velocity) + self.pos
+    pass
 
 
-#class boom(Image):
-#    sound = SoundLoader.load(boom.wav)
-#    def Boom(self, **kwargs):
-#        self.__class__.sound.play()
-#        super(Boom, self).__init__(**kwargs)
+class Boom(Image):
+    sound = SoundLoader.load("Sounds\Boom.wav")
+    def Boom(self, **kwargs):
+        self.__class__.sound.play()
+        super(Boom, self).__init__(**kwargs)
 
 class Ammo(Image):
+
     def shoot(self, tx, ty, target):
         self.target = target
         self.animation = Animation(x=tx, top=ty)
@@ -80,6 +77,20 @@ class Ammo(Image):
 
     def on_start(self, instance, value):
         self.boom = Boom()
+        self.boom.center = self.center
+        self.parent.add_widget(self.boom)
+
+    def on_progress(self, instance, value, progression):
+        if progression >= 0.1:
+            self.parent.remove_widget(self.boom)
+        if self.target.collide_ammo(self):
+            self.animation.stop(self)
+
+    def on_stop(self, instance, value):
+        self.parent.remove_widget(self)
+
+class Shot(Ammo):
+    pass
 
 
 
@@ -108,13 +119,7 @@ class Ship(Widget):
 
     xtouch = NumericProperty(0)
     ytouch = NumericProperty(0)
-    rad = NumericProperty(0)
     degrees = NumericProperty(0)
-
-    print (xtouch)
-
-
-
 
     def on_touch_down(self, touch):
 
@@ -123,11 +128,10 @@ class Ship(Widget):
 
         Animation.cancel_all(self)
         anim = Animation(x=xtouch, y=ytouch, duration=2.5, t='out_sine')
-        #print(xtouch, ytouch)
         anim.start(self)
 
-        #self.x/y is the ships current position
-        #touch.x/y is the postition is moving to
+        #x1,y1 is the ships current position
+        #x2,y2 is the postition it is moving to
         x1 = self.x
         y1 = self.y
         x2 = touch.x
@@ -136,13 +140,14 @@ class Ship(Widget):
 
         deltaX = x2 - x1
         deltaY = y2 - y1
-        #print(x1,x2,y1,y2,deltaX,deltaY)
 
         angle = math.atan2(deltaY, deltaX)
 
+        #convert it from 180 degrees to 360
         if (self.degrees <= 0):
             self.degrees = 360 - (-self.degrees)
 
+        #convert it from radians to degrees
         self.degrees = angle * (180 / math.pi)
         #print (self.degrees)
 
@@ -158,7 +163,6 @@ class HighScores(Screen):
 
     def highscores_button_pressed(self):
         req = UrlRequest("http://bsccg08.ga.fal.io/Highscores/?Highscore=printnames", self.update_string)
-
 
 
 #Class used for managing the different screens
