@@ -56,3 +56,4 @@ docs/_build/
 # PyBuilder
 target/
 /kivy app/.idea
+/Kivy server code/.idea
