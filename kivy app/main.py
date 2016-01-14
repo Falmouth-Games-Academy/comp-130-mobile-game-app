@@ -8,16 +8,23 @@ from kivy.clock import Clock
 from kivy.uix.popup import Popup
 from kivy.uix.label import Label
 from kivy.uix.button import Button
+from kivy.uix.gridlayout import GridLayout
+from kivy.network.urlrequest import UrlRequest
+
+import cgitb
+cgitb.enable()
 
 # TO DO LIST:
-# If not using pages then menu screens/high score widgets
+# Finish leader board pop up & add client server code 
 # Add images/sprites
-# Change truck speeds (different levels)
-# Leader board client server code
+# Add time bonus to score
+# Make speed relative to window size
+# Make truck number relative to window size
 
-RUNTIME = 30  # maybe move & change depending on level
+RUNTIME = 30
 LIVES = 3
 SCORE = 0
+TRUCK_NUMBER = 20
 
 
 class PlayerObject(Widget):
@@ -38,15 +45,16 @@ class PlayerObject(Widget):
             elif self.lives <= 0:
                 print "Game Over"
                 # TheGame.end_game()
-                # self.remove_widget(Trucks)
+                # calling end_game() crashes the program
+                # Might get rid of lives and just take points of score
 
 
 class Trucks(Widget):
     def move(self):
-        """ This function adds the value of TRUCK_SPEED to an instance of Trucks x coordinate everytime it's called
+        """ This function adds the value of speed to an instance of Truck's x coordinate everytime it's called
         :return:
         """
-        if self.center_x > 480:
+        if self.center_x > TheGame.width:
             self.center_x = 0
         else:
             self.center_x += self.speed
@@ -56,28 +64,29 @@ class TheGame(Widget):
     player = PlayerObject()
     timer = NumericProperty(RUNTIME)
     level = NumericProperty(1)
-    speed = NumericProperty(0)
+    speed = NumericProperty(2)
 
     traffic_list = []
 
     end = Label()
     help = Button()
+    score = Button()
 
-    def traffic(self, traffic_list):
+    def traffic(self):
         """This function generates instances of the Trucks objects and adds it to traffic_list. Each instance
         has a random X value and a Y value randomly chosen from a list
         :param traffic_list:
         :return:
         """
-        for t in range(0, 10):
+        for t in range(TRUCK_NUMBER):
             truck = Trucks()
             y_options = [100, 200, 300, 400, 500]
             y_choice = random.choice(y_options)
-            truck.center_x = random.randint(1, 500)
+            truck.center_x = random.randint(-self.width/2, self.width)
             truck.center_y = y_choice
             self.add_widget(truck)
             self.traffic_list.append(truck)
-        return traffic_list
+        return self.traffic_list
 
     def the_timer(self, timer):
         """ This function minus one from the current timer value whenever called.
@@ -85,12 +94,6 @@ class TheGame(Widget):
         :return:
         """
         self.timer -= 1
-        if self.level == 1:
-            self.speed = 2
-        elif self.level == 2:
-            self.speed = 4
-        else:
-            self.speed = 50
 
     def end_game(self):
         """ When called this function removes all the Trucks instances in traffic_list and sets the label
@@ -106,9 +109,14 @@ class TheGame(Widget):
         popup = Popup(title='Help', content=Label(text='Instructions'), size_hint=(None, None), size=(400, 300))
         popup.open()
 
+    def score_board(self):
+         popup = Popup(title='High Scores', content=Label(text='scores'), size_hint=(None, None), size=(400, 300))
+         popup.open()
+        # doesn't work yet
+
     def update(self, dt):
         for t in self.traffic_list:
-            if t.center_x > 480:
+            if t.center_x > self.width:
                 t.center_x = 0
             else:
                 t.center_x += self.speed
@@ -120,10 +128,12 @@ class TheGame(Widget):
             self.level += 1
             self.player.center_y = 0
             self.traffic(self.traffic_list)
+            self.speed = 4
             self.end.text = 'Next level!'
+            self.timer == 20
         else:
             print "end"
-            # Leaderboard/ server stuff
+            # Leader board/ server stuff
 
     def on_touch_move(self, touch):
         """ This function moves the player controlled object when the object is touched """
