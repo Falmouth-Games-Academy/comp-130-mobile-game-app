@@ -3,7 +3,7 @@ __author__ = 'Tom'
 from kivy.app import App
 from kivy.uix.widget import Widget
 from kivy.properties import NumericProperty, ReferenceListProperty,\
-    ObjectProperty
+    ObjectProperty,StringProperty
 from kivy.vector import Vector
 from kivy.clock import Clock
 from kivy.uix.label import Label
@@ -12,10 +12,21 @@ from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.screenmanager import ScreenManager, Screen, FadeTransition
 from kivy.lang import Builder
 from kivy.animation import Animation
+from kivy.network.urlrequest import UrlRequest
 
 
 class Menu(Screen):
-    pass
+
+    snakeplayer = StringProperty()
+
+    def update_string(self, req,results):
+        self.snakeplayer = results
+
+    def button_press(self):
+        user_name = StringProperty()
+        req = UrlRequest("http://bsccg07.ga.fal.io/SnakePlayers/?Name=tom", self.update_string)
+
+
 
 class snakeGame(Screen,Widget):
     pass
@@ -31,22 +42,27 @@ class Monster(Widget):
     ytouch = NumericProperty(0)
 
     def on_touch_down(self, touch):
-        #super(Monster, self).on_touch_down(touch)
         xtouch = touch.x
         ytouch = touch.y
-        movex = NumericProperty(0)
-        movey = NumericProperty(0)
-        if xtouch >= self.Monster.center_x:
-            movex = movex + 10
-
-
-        print(xtouch, ytouch)
+        movex = self.center_x
+        movey = self.center_y
+        if xtouch >= self.center_x:
+            movex = 50
+        else:
+            movex = -50
+        if ytouch >= self.center_y:
+            movey = 50
+        else:
+            movey = -50
 
         Animation.cancel_all(self)
-        anim = Animation(x = movex,y = movey , duration = 1, t = 'out_sine')
-        print(xtouch,ytouch)
+        anim = Animation(x = self.x + movex,y = self.y + movey, duration = 0.5)
         anim.start(self)
         return anim
+
+
+class Trash(Widget):
+    pass
 
 
 snakeGameKivy = Builder.load_file("snake.kv")
