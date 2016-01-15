@@ -12,14 +12,17 @@
             padding: '100dp'
             Button:
                 background_normal: 'images\image.jpg'
-                text: 'BATTLE'
+                text: 'BATTLE!'
                 on_press:
                     root.manager.transition = RiseInTransition()
                     root.manager.current = 'battle'
         BoxLayout:
             padding: '100dp'
             Button:
-                text: 'Quit'
+                text: 'Manage Your Account'
+                on_press:
+                    root.manager.transition = FadeTransition()
+                    root.manager.current = 'login'
 
 <BattleScreen>:
     BoxLayout:
@@ -40,19 +43,24 @@
                     text_size: self.size
                     halign: 'left'
                     valign: 'top'
-                    text: root.make_stat_text('Monster:')
+                    id: monsterDescription
+                    text: app.monsterDescription
                 Label:
                     text_size: self.size
                     halign: 'left'
                     valign: 'top'
-                    text: root.make_stat_text('Player:')
+                    id: playerDescription
+                    text: app.playerDescription
 
         BoxLayout:
             size_hint_y: 25
             Button:
                 size_hint_x: 25
                 text: 'Hit'
-                on_press: app.play_sound1()
+                on_press:
+                    ##root.update_descriptions(app.playerDescription, app.monsterDescription)
+                    app.play_sound1()
+                    app.attack_monster()
             BoxLayout:
                 orientation: 'vertical'
                 size_hint_x: 33
@@ -74,6 +82,15 @@
                     size_hint_y: 50
                 Button:
                     size_hint_y: 50
+                    text: 'Quit'
                     on_press:
                         root.manager.transition = FallOutTransition()
                         root.manager.current = 'menu'
+
+<LogInScreen>:
+    BoxLayout:
+        Button:
+            text: 'Back To Menu'
+            on_press:
+                root.manager.transition = FadeTransition()
+                root.manager.current = 'menu'
