@@ -1,8 +1,7 @@
 # Author James Hellman
 # Sourcecode from kivy Pong
 import kivy
-import datetime
-kivy.require('1.1.1')
+kivy.require('1.0.9')
 
 from kivy.app import App
 from kivy.uix.widget import Widget
@@ -12,18 +11,19 @@ from kivy.vector import Vector
 from kivy.clock import Clock
 from random import randint
 from kivy.config import Config
-from kivy.uix.button import Button
-from kivy.uix.boxlayout import BoxLayout
+
 # don't make the app re-sizeable
 Config.set('graphics', 'resizable', 0)
 
 
 class TrashCan(Widget):
+    # setting up the two score counters
     score = NumericProperty(0)
-    scoreloss = NumericProperty(0)
+    scoreLoss = NumericProperty(0)
 
 
 class Cracker(Widget):
+    # setting up the cracker and making it move
     velocity_x = NumericProperty(0)
     velocity_y = NumericProperty(0)
     velocity = ReferenceListProperty(velocity_x, velocity_y)
@@ -31,91 +31,71 @@ class Cracker(Widget):
     def move(self):
         self.pos = Vector(*self.velocity) + self.pos
 
-    def progress(self):
-        addwidget
-
 
 class TrashGame(Widget):
-    ball = ObjectProperty(None)
+    cracker = ObjectProperty(None)
+    # player1 and player are used to separate the Caught/Lost scores
     player1 = ObjectProperty(None)
     player = ObjectProperty(None)
 
-    def serve_ball(self, vel=(5, -10)):
-        self.ball.x = randint(-1, 750)
-        self.ball.y = randint(700, 701)
-        self.ball.velocity = vel
+# Possibility for adding crackers
+#    def add_cracker(self, vel):
+#        X = randint(-1, 750)
+#        Y = randint(500, 701)
+#        self.cracker.velocity = vel
+#        self.add_widget(Cracker(vel, pos=(X, Y)))
+
+    def serve_cracker(self, vel=(5, -10)):
+        # These are used to start the cracker in a random position each time one spawns.
+        self.cracker.x = randint(-1, 750)
+        self.cracker.y = randint(600, 601)
+        self.cracker.velocity = vel
+        # trying to add widgets that move
+        # cant figure out how to count the quantity of them on the screen so i can limit them.
+        X = randint(-1, 750)
+        Y = randint(500, 700)
+        self.add_widget(Cracker(vel, pos=(X, Y)))
 
     def update(self, dt):
-        self.ball.move()
+        self.cracker.move()
+        # these are used to create a random speed of each cracker
         X = randint(-15, 15)
         Y = randint(-15, -6)
-        # bounce off left and right
-        if (self.ball.x < 0) or (self.ball.right > self.width):
-            self.ball.velocity_x *= -1
+        # bounce cracker off left and right
+        if (self.cracker.x < 0) or (self.cracker.right > self.width):
+            self.cracker.velocity_x *= -1
 
-        # went off a side to score point
-        if self.ball.y < self.y-200:
-            self.player1.scoreloss += 1
-            self.serve_ball(vel=(X, Y))
-        if self.ball.collide_widget(self.player1):
+        # If you catch the Cracker you score a point, if you miss it you loss a point.
+        if self.cracker.y < self.y-200:
+            self.player1.scoreLoss += 1
+            self.serve_cracker(vel=(X, Y))
+            self.serve_cracker(vel=(X, Y))
+        if self.cracker.collide_widget(self.player1):
             self.player1.score += 1
-            self.serve_ball(vel=(X, Y))
+            self.serve_cracker(vel=(X, Y))
+            self.serve_cracker(vel=(X, Y))
 
     def on_touch_move(self, touch):
+        # Movement for the player
         if touch.y < self.width:
             self.player1.center_x = touch.x
 
-#####TO DO LATER####
+# To be used later
+# class Online(Widget):
 
-#class Online(Widget):
+    # def update_string(self, req, results):
+        # self.hello_world = results
 
-    #def update_string(self, req, results):
-       # self.hello_world = results
+    # def button_pressed(self):
+        # req = UrlRequest("http://bsccg06.ga.fal.io/hello_world/?user=Class", self.update_string)
 
-  #  def button_pressed(self):
-     #   req = UrlRequest("http://bsccg06.ga.fal.io/hello_world/?user=Class", self.update_string)
-
-
-#class Time(Widget):
-
-    #def time(self):
-       # self.modes = (
-            #'%I:%m:%S',
-           # '%H:%m:%S %P',
-           # '%S:',
-        #)
-       # self.mode = 0
-       # self.main_box = BoxLayout(orientation='vertical')
-
-       # self.button = Button(text='label', font_size=100, font_name='comic.ttf')
-       # self.main_box.add_widget(self.button)
-
-       # self.button.bind(on_press=self.tap)
-       # Clock.schedule_interval(self.timer, 0.01)
-
-       # return self.main_box
-
-    #def tap(self, button):
-        #if self.mode +1 == len(self.modes):
-            #self.mode = 0
-        #else:
-           # self.mode +=1
-
-    #def timer(self, dt):
-       # now = datetime.datetime.now()
-        #self.button.text = now.strftime(self.modes[self.mode])
-        #if self.mode == 2:
-            #self.button.text += str(now.microsecond)[:3]
-
-
-######
 class TrashApp(App):
     def build(self):
         game = TrashGame()
-        game.serve_ball()
+        game.serve_cracker()
+        Cracker()
         Clock.schedule_interval(game.update, 1.0 / 60.0)
         return game
-
 
 if __name__ == '__main__':
     TrashApp().run()

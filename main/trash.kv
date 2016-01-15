@@ -1,10 +1,10 @@
 #:kivy 1.0.9
-###Please Change Directories of the Source for the Cracker and TrashCan###
+
 <Cracker>:
     size: 50, 50
     canvas:
         Ellipse:
-            source: "F:\GitHubGames\comp-130-mobile-game-app\main\Cracker.png"
+            source: "C:\Users\James\Documents\Uni\Kivy App\Pictures\cracker-md.png"
             pos: self.pos
             size: self.size
 
@@ -12,7 +12,7 @@
     size: 200, 25
     canvas:
         Rectangle:
-            source: "F:\GitHubGames\comp-130-mobile-game-app\main\Bin.png"
+            source: "C:\Users\James\Documents\Uni\Kivy App\Pictures\Bin.png"
             pos:self.pos
             size:self.size
 
@@ -24,7 +24,7 @@
             text: elapsed
 
 <TrashGame>:
-    ball: pong_ball
+    cracker: pong_ball
     player1: player_left
 
     Label:
@@ -43,7 +43,7 @@
         font_size: 50
         center_x: root.width / 15
         center_y: root.height / 1.4
-        text: str(root.player1.scoreloss)
+        text: str(root.player1.scoreLoss)
 
     Label:
         font_size: 20
