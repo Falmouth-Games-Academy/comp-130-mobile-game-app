@@ -13,6 +13,7 @@ from kivy.network.urlrequest import UrlRequest
 
 import cgitb
 cgitb.enable()
+import Leaderboard
 
 # TO DO LIST:
 # Finish leader board pop up & add client server code
@@ -21,7 +22,7 @@ cgitb.enable()
 # Make speed relative to window size
 # Make truck number relative to window size
 
-RUNTIME = 30
+INITIAL_RUNTIME = 30
 LIVES = 3
 SCORE = 0
 TRUCK_NUMBER = 20
@@ -51,7 +52,7 @@ class PlayerObject(Widget):
 
 class Trucks(Widget):
     def move(self):
-        """ This function adds the value of speed to an instance of Truck's x coordinate everytime it's called
+        """ This function adds the value of speed to an instance of Truck's x coordinate every time it's called
         :return:
         """
         if self.center_x > TheGame.width:
@@ -59,10 +60,14 @@ class Trucks(Widget):
         else:
             self.center_x += self.speed
 
+    def close_trucks(self, truck):
+        if self.collide_widget(truck):
+            truck.x = -50
+
 
 class TheGame(Widget):
     player = PlayerObject()
-    timer = NumericProperty(RUNTIME)
+    timer = NumericProperty(INITIAL_RUNTIME)
     level = NumericProperty(1)
     speed = NumericProperty(2)
 
@@ -72,7 +77,7 @@ class TheGame(Widget):
     help = Button()
     score = Button()
 
-    def traffic(self):
+    def traffic(self, traffic_list):
         """This function generates instances of the Trucks objects and adds it to traffic_list. Each instance
         has a random X value and a Y value randomly chosen from a list
         :param traffic_list:
@@ -110,8 +115,8 @@ class TheGame(Widget):
         popup.open()
 
     def score_board(self):
-         popup = Popup(title='High Scores', content=Label(text='scores'), size_hint=(None, None), size=(400, 300))
-         popup.open()
+        popup = Popup(title='High Scores', content=Label(text='scores'), size_hint=(None, None), size=(400, 300))
+        popup.open()
         # doesn't work yet
 
     def update(self, dt):
@@ -120,8 +125,8 @@ class TheGame(Widget):
                 t.center_x = 0
             else:
                 t.center_x += self.speed
-        # self.truck.move()
             self.player.truck_collision(t)
+            # t.close_trucks(t)
 
     def next_level(self):
         if self.level == 1:
@@ -153,7 +158,7 @@ class TheGame(Widget):
         # Don't want player to be able to move back
 
         # prevents player object from leaving the screen
-        if self.player.center_y > 640:
+        if self.player.center_y > self.height:
             self.end_game()
             # end_game()
             # crashes game
