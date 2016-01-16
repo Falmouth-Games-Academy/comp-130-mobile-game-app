@@ -15,7 +15,7 @@ import cgitb
 cgitb.enable()
 
 # TO DO LIST:
-# Finish leader board pop up & add client server code 
+# Finish leader board pop up & add client server code
 # Add images/sprites
 # Add time bonus to score
 # Make speed relative to window size
