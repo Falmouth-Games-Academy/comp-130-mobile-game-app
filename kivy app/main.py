@@ -1,6 +1,8 @@
 # Filename: main.py
 import random
 import time
+import Leaderboard
+import multiprocessing
 from kivy.app import App
 from kivy.uix.widget import Widget
 from kivy.properties import NumericProperty
@@ -14,7 +16,7 @@ from kivy.uix.gridlayout import GridLayout
 from kivy.network.urlrequest import UrlRequest
 import cgitb
 cgitb.enable()
-import Leaderboard
+
 
 # TO DO LIST:
 # Finish leader board pop up & add client server code
@@ -71,12 +73,27 @@ class TheGame(Widget):
     timer = NumericProperty(INITIAL_RUNTIME)
     level = NumericProperty(1)
     speed = NumericProperty(2)
+    width_or_height = "width"
 
     traffic_list = []
+
 
     end = Label()
     help = Button()
     score = Button()
+
+    def get_coordinates(self):
+        if self.width_or_height == "width":
+            window_dimension = self.width
+        elif self.width_or_height == "height":
+            window_dimension = self.height - 100
+        size = int(window_dimension / 100)
+        position = 100
+        options = []
+        for i in range(size):
+            options.append(position)
+            position += 100
+        return options
 
     def traffic(self, traffic_list):
         """This function generates instances of the Trucks objects and adds it to traffic_list. Each instance
@@ -86,9 +103,13 @@ class TheGame(Widget):
         """
         for t in range(TRUCK_NUMBER):
             truck = Trucks()
-            y_options = [100, 200, 300, 400, 500]
+            self.width_or_height = "height"
+            y_options = self.get_coordinates()
             y_choice = random.choice(y_options)
-            truck.center_x = random.randint(-self.width/2, self.width)
+            self.width_or_height = "width"
+            x_options = self.get_coordinates()
+            x_choice = random.choice(x_options)
+            truck.center_x = x_choice
             truck.center_y = y_choice
             self.add_widget(truck)
             self.traffic_list.append(truck)
@@ -139,7 +160,8 @@ class TheGame(Widget):
             self.timer == 20
         else:
             #print "end"
-            Leaderboard.LeaderboardApp().run()
+            # Leaderboard.LeaderboardApp().run()
+            multiprocessing.Process(target=Leaderboard.LeaderboardApp().run).start()
             # Leader board/ server stuff
 
     def on_touch_move(self, touch):
