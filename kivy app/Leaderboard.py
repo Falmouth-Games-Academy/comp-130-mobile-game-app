@@ -26,4 +26,4 @@ class LeaderboardApp(App):
         self.results_label.text = "Getting scores"
         request = UrlRequest('http://bsccg04.ga.fal.io/top10.py', self.got_weather)
 
-LeaderboardApp().run()
+# LeaderboardApp().run()

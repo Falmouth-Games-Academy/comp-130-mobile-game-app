@@ -8,9 +8,10 @@ from kivy.clock import Clock
 from kivy.uix.popup import Popup
 from kivy.uix.label import Label
 from kivy.uix.button import Button
+from kivy.core.audio import SoundLoader
+from kivy.uix.image import Image
 from kivy.uix.gridlayout import GridLayout
 from kivy.network.urlrequest import UrlRequest
-
 import cgitb
 cgitb.enable()
 import Leaderboard
@@ -36,15 +37,15 @@ class PlayerObject(Widget):
     def truck_collision(self, truck):
         """ The function minuses 1 from the current lives value when an instance of Player collides
         with an instance of Trucks
-        :param truck:
+        :param truck: truck is an instance of the Trucks class
         :return:
         """
         if self.collide_widget(truck):
             truck.x = -750
             if self.lives > 0:
                 self.lives -= 1
-            elif self.lives <= 0:
-                print "Game Over"
+            # elif self.lives <= 0:
+                # print "Game Over"
                 # TheGame.end_game()
                 # calling end_game() crashes the program
                 # Might get rid of lives and just take points of score
@@ -80,7 +81,7 @@ class TheGame(Widget):
     def traffic(self, traffic_list):
         """This function generates instances of the Trucks objects and adds it to traffic_list. Each instance
         has a random X value and a Y value randomly chosen from a list
-        :param traffic_list:
+        :param traffic_list: traffic_list is a list containing all the instances of the Trucks class
         :return:
         """
         for t in range(TRUCK_NUMBER):
@@ -137,7 +138,8 @@ class TheGame(Widget):
             self.end.text = 'Next level!'
             self.timer == 20
         else:
-            print "end"
+            #print "end"
+            Leaderboard.LeaderboardApp().run()
             # Leader board/ server stuff
 
     def on_touch_move(self, touch):
