@@ -55,7 +55,7 @@ class Pipe(Widget):
         #self.width = self.top_image.width
         self.scored = False
 
-# update the pipe widget with the x position moving 2 pipes worth of space
+# update the pipe widget with the x position moving 2 pixels
 # set the top and bottom image as the updating self.x value
 # if the pipe is less than 0 position remove the pipe widget
     def update(self):
@@ -94,6 +94,7 @@ class Background(Widget):
         self.add_widget(self.image_dupe)
 
 # update the image and duplicate
+# move left by 2 pixels
 # when the image is less than 0 place image duplicate at the end of the last image
     def update(self):
         self.image.x -= 2
@@ -132,6 +133,8 @@ class Bird(Sprite):
 
 
 # the ground is called as a sprite with the ground being updated moving it's x position
+# move left two pixels per update
+# if the x value is less than -24 then add 24
 class Ground(Sprite):
     def update(self):
         self.x -= 2
