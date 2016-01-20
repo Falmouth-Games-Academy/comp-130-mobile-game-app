@@ -39,10 +39,9 @@ class Sprite(Image):
         super(Sprite, self).__init__(**kwargs)
         self.size = self.texture_size
 
-# the pipe class used as widget, set the top and bottom image as different pipes, add each as widget
+# the pipe class used as widget, one set the top and bottom image as different pipes, add each as widget
 # set top image position to x, with y being 5.5 * the size of the player
 # set the score to false as default
-# one set
 class Pipe(Widget):
     def __init__(self, pos):
         super(Pipe, self).__init__(pos=pos)
