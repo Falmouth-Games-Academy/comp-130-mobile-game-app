@@ -39,21 +39,9 @@
 
     Label:
         font_size: 70
-        center_x: root.width / 4
-        top: root.top
-        text: str(root.player.lives)
-
-    Label:
-        font_size: 70
         center_x: root.width / 2
         top: root.top
         text: str(root.timer)
-
-    Label:
-        font_size: 20
-        center_x: root.width / 4
-        center_y: root.top -10
-        text: "Lives:"
 
     Label:
         font_size: 20
@@ -91,8 +79,8 @@
         font_size: 20
         x: root.width - 100
         center_y: root.height - 25
-        text: 'Score'
-        on_press: root.score_board()
+        text: 'Scores'
+        # on_press: root.score_board()
 
     PlayerObject:
         id: player

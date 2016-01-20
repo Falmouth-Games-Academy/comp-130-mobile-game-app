@@ -3,27 +3,59 @@ from kivy.uix.button import Button
 from kivy.uix.label import Label
 from kivy.uix.gridlayout import GridLayout
 from kivy.network.urlrequest import UrlRequest
-import cgitb
-
-cgitb.enable()
+from kivy.uix.textinput import TextInput
+from kivy.uix.dropdown import DropDown
+from kivy.base import runTouchApp
 
 
 class LeaderboardApp(App):
-    score_button = Button(text="Get scores")
+    choice_button = Button(text="Get results")
     results_label = Label(text="High scores", font_size='20sp')
+    textinput = TextInput(text='Enter username here.', multiline=False)
+    dropdown = DropDown()
+    dropdown_button = Button(text="Select an option")
+    dropdown_button.bind(on_release=dropdown.open)
+    layout = GridLayout(rows=5)
+    drop_down_options = ["Top 10 Scores", "Add New User", "Top scores for user", "Change User Name"]
+    URL_choice = "None"
 
     def build(self):
-        layout = GridLayout(rows=3)
-        self.score_button.bind(on_press=self.callback)
-        layout.add_widget(self.score_button)
-        layout.add_widget(self.results_label)
-        return layout
 
-    def got_weather(self, request, results):
-        self.results_label.text = results
+        self.choice_button.bind(on_press=self.callback)
+
+        for d in self.drop_down_options:
+            btn = Button(text=d, size_hint_y=None, height=44)
+            btn.bind(on_release=lambda btn: self.dropdown.select(btn.text))
+            self.dropdown.add_widget(btn)
+        self.dropdown.bind(on_select=lambda instance, x: setattr(self.dropdown_button, 'text', x))
+
+        self.layout.add_widget(self.dropdown_button)
+        self.layout.add_widget(self.textinput)
+        self.layout.add_widget(self.choice_button)
+        self.layout.add_widget(self.results_label)
+        return self.layout
+
+    def choice_made(self):
+        self.choice_button.text = self.mainbutton.text
+        self.layout.add_widget(self.choice_button)
+
+    def got_top_10(self, request, results):
+        self.results_label.text = str(results)
+
+    #def choose_request(self):
 
     def callback(self, event):
+        playername = self.textinput.text[:3]
+        self.textinput.text = playername
         self.results_label.text = "Getting scores"
-        request = UrlRequest('http://bsccg04.ga.fal.io/top10.py', self.got_weather)
 
-# LeaderboardApp().run()
+        if self.dropdown_button.text == "Top 10 Scores":
+            self.URL_choice = 'http://bsccg04.ga.fal.io/top10.py'
+        elif self.dropdown_button.text == "Add New User":
+            self.URL_choice = 'http://bsccg04.ga.fal.io/new_user.py?playername=' + playername
+
+        print self.URL_choice
+
+        request = UrlRequest(self.URL_choice, self.got_top_10)
+
+LeaderboardApp().run()

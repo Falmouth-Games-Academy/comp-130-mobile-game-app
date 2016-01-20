@@ -13,9 +13,7 @@ from kivy.uix.button import Button
 from kivy.core.audio import SoundLoader
 from kivy.uix.image import Image
 from kivy.uix.gridlayout import GridLayout
-from kivy.network.urlrequest import UrlRequest
-import cgitb
-cgitb.enable()
+
 
 
 # TO DO LIST:
@@ -26,7 +24,6 @@ cgitb.enable()
 # Make truck number relative to window size
 
 INITIAL_RUNTIME = 30
-LIVES = 3
 SCORE = 0
 TRUCK_NUMBER = 20
 
@@ -34,38 +31,36 @@ TRUCK_NUMBER = 20
 class PlayerObject(Widget):
     """ Player controlled object """
     score = NumericProperty(SCORE)
-    lives = NumericProperty(LIVES)
 
     def truck_collision(self, truck):
-        """ The function minuses 1 from the current lives value when an instance of Player collides
+        """ The function minuses 1 from the current score value when an instance of Player collides
         with an instance of Trucks
         :param truck: truck is an instance of the Trucks class
         :return:
         """
         if self.collide_widget(truck):
-            truck.x = -750
-            if self.lives > 0:
-                self.lives -= 1
-            # elif self.lives <= 0:
-                # print "Game Over"
-                # TheGame.end_game()
-                # calling end_game() crashes the program
-                # Might get rid of lives and just take points of score
-
+            truck.x -= 500
+            self.score -= 1
 
 class Trucks(Widget):
+    def choose_color(self):
+        truck_colour = random.randint(1,3)
+        if truck_colour == 1:
+            image_source ="G:\Documents\GitHub\COMP130\comp-130-mobile-game-app\Kivy App\Resources\yellow_truck.png"
+
+
+
+
     def move(self):
         """ This function adds the value of speed to an instance of Truck's x coordinate every time it's called
         :return:
         """
         if self.center_x > TheGame.width:
             self.center_x = 0
+            print TheGame.width
         else:
             self.center_x += self.speed
-
-    def close_trucks(self, truck):
-        if self.collide_widget(truck):
-            truck.x = -50
+            print self.speed
 
 
 class TheGame(Widget):
@@ -74,9 +69,9 @@ class TheGame(Widget):
     level = NumericProperty(1)
     speed = NumericProperty(2)
     width_or_height = "width"
+    game_over = "False"
 
     traffic_list = []
-
 
     end = Label()
     help = Button()
@@ -117,10 +112,16 @@ class TheGame(Widget):
 
     def the_timer(self, timer):
         """ This function minus one from the current timer value whenever called.
-        :param timer:
+        :param timer: passes in the current value of timer that's being displayed on screen
         :return:
         """
-        self.timer -= 1
+        if self.game_over == "False":
+            if self.timer <= 0:
+                self.end_game()
+            else:
+                self.timer -= 1
+        else:
+            self.timer = 0
 
     def end_game(self):
         """ When called this function removes all the Trucks instances in traffic_list and sets the label
@@ -136,15 +137,10 @@ class TheGame(Widget):
         popup = Popup(title='Help', content=Label(text='Instructions'), size_hint=(None, None), size=(400, 300))
         popup.open()
 
-    def score_board(self):
-        popup = Popup(title='High Scores', content=Label(text='scores'), size_hint=(None, None), size=(400, 300))
-        popup.open()
-        # doesn't work yet
-
     def update(self, dt):
         for t in self.traffic_list:
             if t.center_x > self.width:
-                t.center_x = 0
+                t.center_x = -100
             else:
                 t.center_x += self.speed
             self.player.truck_collision(t)
@@ -159,9 +155,9 @@ class TheGame(Widget):
             self.end.text = 'Next level!'
             self.timer == 20
         else:
-            #print "end"
-            # Leaderboard.LeaderboardApp().run()
-            multiprocessing.Process(target=Leaderboard.LeaderboardApp().run).start()
+            self.timer == 0
+            # Leaderboard.LeaderboardApp()
+            # multiprocessing.Process(target=Leaderboard.LeaderboardApp().run).start()
             # Leader board/ server stuff
 
     def on_touch_move(self, touch):
@@ -184,9 +180,6 @@ class TheGame(Widget):
         # prevents player object from leaving the screen
         if self.player.center_y > self.height:
             self.end_game()
-            # end_game()
-            # crashes game
-            # End game when player reaches top
 
 
 class COMP130App(App):
