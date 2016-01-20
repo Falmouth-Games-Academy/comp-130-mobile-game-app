@@ -42,6 +42,7 @@ class Sprite(Image):
 # the pipe class used as widget, set the top and bottom image as different pipes, add each as widget
 # set top image position to x, with y being 5.5 * the size of the player
 # set the score to false as default
+# one set
 class Pipe(Widget):
     def __init__(self, pos):
         super(Pipe, self).__init__(pos=pos)
@@ -65,6 +66,7 @@ class Pipe(Widget):
         if self.right < 0:
             self.parent.remove_widget(self)
 
+# all pipes
 # the pipes class changes the calling of pipes
 # update the pipes by time
 # add a pipe at random height and width for gap position
