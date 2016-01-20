@@ -104,6 +104,7 @@ class Background(Widget):
             self.image_dupe.x = self.width
 
 # the bird class is called as a sprite with the velocity and gravity of player is set
+# initial value of velocity is set to 0 and gravity is -0.3
 class Bird(Sprite):
     def __init__(self, pos):
         super(Bird, self).__init__(source="atlas://Resources/kivy-game-dev/flappy/images/owl_anim/wing-up", pos=pos)
@@ -123,6 +124,7 @@ class Bird(Sprite):
             self.source = "atlas://Resources/kivy-game-dev/flappy/images/owl_anim/wing-mid" #"Resources/kivy-game-dev/flappy/images/owl.png"  "atlas://Resources/kivy-game-dev/flappy/images/bird_anim/wing-mid"
 
 # when clicked set the velocity and change the bird image and make flap sound
+# on event the velocity is set to 5.5
     def on_touch_down(self, *ignore):
         self.velocity_y = 5.5
         self.source = "atlas://Resources/kivy-game-dev/flappy/images/owl_anim/wing-down" # "Resources/kivy-game-dev/flappy/images/owl.png"  "atlas://Resources/kivy-game-dev/flappy/images/bird_anim/wing-down"
