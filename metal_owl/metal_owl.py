@@ -20,10 +20,12 @@ sfx_die = SoundLoader.load("Resources/kivy-game-dev/flappy/audio/Owl_music.wav")
 class Menu(Widget):
     def __init__(self):
         super(Menu, self).__init__()
-        self.add_widget(Sprite(source="Resources/kivy-game-dev/flappy/images/background.png"))
+        self.add_widget(Sprite(source="Resources/kivy-game-dev/flappy/images/metal_background.png"))
         self.size = self.children[0].size
-        self.add_widget(Ground(source="Resources/kivy-game-dev/flappy/images/ground.png"))
-        self.add_widget(Label(center=self.center, text="tap to start"))
+        self.add_widget(Ground(source="Resources/kivy-game-dev/flappy/images/metal_ground.png"))
+        self.add_widget(Label(center=self.center, text="METAL" + "\n" + " GEAR" + "\n" + " OWL"))
+        #self.add_widget(Label(pos=(self.center_x-44, self.center_y+4), text="METAL" + "\n" + " GEAR" + "\n" + " OWL"))
+        self.add_widget(Label(pos=(self.center_x-44, self.center_y-140), text="Tap to start"))
 # when click down remove the menu widget and add the game widget as the new parent
     def on_touch_down(self, *ignore):
         parent = self.parent
@@ -42,11 +44,11 @@ class Sprite(Image):
 class Pipe(Widget):
     def __init__(self, pos):
         super(Pipe, self).__init__(pos=pos)
-        #self.top_image = Sprite(source="Resources/kivy-game-dev/flappy/images/pipe_top.png")
-        #self.top_image.pos = (self.x, self.y + 4 * 24)
-        #self.add_widget(self.top_image)
+        self.top_image = Sprite(source="Resources/kivy-game-dev/flappy/images/spike_top.png")
+        self.top_image.pos = (self.x, self.y + 99)
+        self.add_widget(self.top_image)
         self.bottom_image = Sprite(source="Resources/kivy-game-dev/flappy/images/spike_bottom.png")
-        self.bottom_image.pos = (self.x, self.y - 14 * 24)#- self.bottom_image.height)
+        self.bottom_image.pos = (self.x, self.y - 340)#- self.bottom_image.height)
         self.add_widget(self.bottom_image)
         self.width = self.bottom_image.width
         #self.width = self.top_image.width
@@ -57,8 +59,8 @@ class Pipe(Widget):
 # if the pipe is less than 0 position remove the pipe widget
     def update(self):
         self.x -=  2
-        #self.top_image.x = self.bottom_image.x = self.x
-        self.bottom_image.x = self.x
+        self.top_image.x = self.bottom_image.x = self.x
+        #self.bottom_image.x = self.x
         if self.right < 0:
             self.parent.remove_widget(self)
 
@@ -72,11 +74,11 @@ class Pipes(Widget):
             child.update()
         self.add_pipe -= dt
         if self.add_pipe < 0:
-            y = random.randint(self.y + 50, self.height - 50 - 4 * 24)
+            y = random.randint(self.y + 50, self.height - 144)
             #x=self.width
             x = random.randint(self.width, self.width + 40)
             self.add_widget(Pipe(pos=(x, y)))
-            self.add_pipe = 1.5
+            self.add_pipe = random.uniform(0.5,4.0)
 
 
 # add background widget where image sprite is used
@@ -130,6 +132,7 @@ class Bird(Sprite):
 class Ground(Sprite):
     def update(self):
         self.x -= 2
+
         if self.x < -24:
             self.x += 24
 
@@ -145,10 +148,10 @@ class Ground(Sprite):
 class Game(Widget):
     def __init__(self):
         super(Game, self).__init__()
-        self.background = Background(source="Resources/kivy-game-dev/flappy/images/background.png")
+        self.background = Background(source="Resources/kivy-game-dev/flappy/images/metal_background.png")
         self.size = self.background.size
         self.add_widget(self.background)
-        self.ground = Ground(source="Resources/kivy-game-dev/flappy/images/ground.png")
+        self.ground = Ground(source="Resources/kivy-game-dev/flappy/images/metal_ground.png")
         self.pipes = Pipes(pos=(0, self.ground.height), size=self.size)
         self.add_widget(self.pipes)
         self.add_widget(self.ground)
@@ -195,12 +198,13 @@ class Game(Widget):
         #bounce off top and bottom
         if (self.bird.y < 40):
             self.bird.y = 40
-        if (self.bird.top > self.height):
-            self.bird.velocity_y *= -1.0
+        if (self.bird.top > self.height-40):
+            #self.bird.velocity_y *= -1.0
+            self.bird.top = self.height-44
 
         for pipe in self.pipes.children:
-            #if pipe.top_image.collide_widget(self.bird):
-                #self.game_over = True
+            if pipe.top_image.collide_widget(self.bird):
+                self.game_over = True
             if pipe.bottom_image.collide_widget(self.bird): #was elif
                 self.game_over = True
             elif not pipe.scored and pipe.right < self.bird.x:
@@ -208,6 +212,7 @@ class Game(Widget):
                 self.score += 1
                 self.score_label.text = str(self.score) + " m"
                 #sfx_score.play()
+
 
 # play die sound and change opacity of the over_label to visible
         if self.game_over:
@@ -219,6 +224,7 @@ class Game(Widget):
     def _on_touch_down(self, *ignore):
         parent = self.parent
         parent.remove_widget(self)
+        #parent.add_scores(Scores())
         parent.add_widget(Menu())
 
 
