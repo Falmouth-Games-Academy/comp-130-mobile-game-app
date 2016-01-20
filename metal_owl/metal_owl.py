@@ -17,6 +17,7 @@ sfx_score = SoundLoader.load("Resources/kivy-game-dev/flappy/audio/score.wav")
 sfx_die = SoundLoader.load("Resources/kivy-game-dev/flappy/audio/Owl_music.wav")
 
 # create the main menu using the widget to add the background, ground, label
+# super makes sure the widget is initialised
 class Menu(Widget):
     def __init__(self):
         super(Menu, self).__init__()
