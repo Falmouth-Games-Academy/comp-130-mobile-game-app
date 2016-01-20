@@ -139,6 +139,7 @@ class Ground(Sprite):
 
 # the game is called as a widget
 # the background is set and added as a widget
+# the game size is set to the size of the background
 # the pipes are added as a widget under the ground so that the ground covers bottom edge
 # the ground is added as a widget
 # the score label is centered but at the top of the screen with a default text of "0" score
