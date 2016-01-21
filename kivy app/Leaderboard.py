@@ -53,9 +53,11 @@ class LeaderboardApp(App):
             self.URL_choice = 'http://bsccg04.ga.fal.io/top10.py'
         elif self.dropdown_button.text == "Add New User":
             self.URL_choice = 'http://bsccg04.ga.fal.io/new_user.py?playername=' + playername
+        elif self.dropdown_button.text == "Top scores for user":
+            self.URL_choice = 'http://bsccg04.ga.fal.io/users_high_score.py?playername=' + playername
 
         print self.URL_choice
 
         request = UrlRequest(self.URL_choice, self.got_top_10)
 
-LeaderboardApp().run()
+# LeaderboardApp().run()

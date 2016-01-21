@@ -12,16 +12,12 @@ from kivy.uix.label import Label
 from kivy.uix.button import Button
 from kivy.core.audio import SoundLoader
 from kivy.uix.image import Image
-from kivy.uix.gridlayout import GridLayout
-
-
 
 # TO DO LIST:
 # Finish leader board pop up & add client server code
+# FIX TIMER LEADERBOARD PROBLEM
 # Add images/sprites
 # Add time bonus to score
-# Make speed relative to window size
-# Make truck number relative to window size
 
 INITIAL_RUNTIME = 30
 SCORE = 0
@@ -31,6 +27,7 @@ TRUCK_NUMBER = 20
 class PlayerObject(Widget):
     """ Player controlled object """
     score = NumericProperty(SCORE)
+    jump_sound = SoundLoader.load('Resources\jump.wav')
 
     def truck_collision(self, truck):
         """ The function minuses 1 from the current score value when an instance of Player collides
@@ -42,25 +39,24 @@ class PlayerObject(Widget):
             truck.x -= 500
             self.score -= 1
 
+
 class Trucks(Widget):
-    def choose_color(self):
-        truck_colour = random.randint(1,3)
+    image_source = "Resources/green_truck.png"
+    """def __init__(self):
+        truck_colours = ["Resources/yellow_truck.png", "Resources/blue_truck.png"]
+        image_source = random.choice(truck_colours)"""
+    """
+    def colours(self):
+        truck_colour = random.randint(1, 3)
         if truck_colour == 1:
-            image_source ="G:\Documents\GitHub\COMP130\comp-130-mobile-game-app\Kivy App\Resources\yellow_truck.png"
-
-
-
-
-    def move(self):
-        """ This function adds the value of speed to an instance of Truck's x coordinate every time it's called
-        :return:
-        """
-        if self.center_x > TheGame.width:
-            self.center_x = 0
-            print TheGame.width
+            self.image_source = "Resources/yellow_truck.png"
+        elif truck_colour == 2:
+            self.image_source = "Resources/red_truck.png"
+        elif truck_colour == 3:
+            self.image_source = "Resources/blue_truck.png"
         else:
-            self.center_x += self.speed
-            print self.speed
+            self.image_source = "Resources/green_truck.png"""""
+
 
 
 class TheGame(Widget):
@@ -76,6 +72,10 @@ class TheGame(Widget):
     end = Label()
     help = Button()
     score = Button()
+
+    def help_popup(self):
+        popup = Popup(title='Help', content=Label(text='Instructions'), size_hint=(None, None), size=(400, 300))
+        popup.open()
 
     def get_coordinates(self):
         if self.width_or_height == "width":
@@ -123,6 +123,38 @@ class TheGame(Widget):
         else:
             self.timer = 0
 
+    def update(self, dt):
+        for t in self.traffic_list:
+            if t.center_x > self.width:
+                t.center_x = -100
+            else:
+                t.center_x += self.speed
+            self.player.truck_collision(t)
+
+    def on_touch_move(self, touch):
+        """ This function moves the player controlled object when the object is touched """
+        # moves player right
+        if touch.x > self.player.center_x:
+            self.player.center_x += 45
+            self.player.jump_sound.play()
+            time.sleep(0.1)
+        # moves player up
+        if touch.y > self.player.y:
+            self.player.center_y += 45
+            time.sleep(0.1)
+            self.player.jump_sound.play()
+            self.player.score += 1
+        # moves player left
+        if touch.x < self.player.center_x:
+            self.player.center_x -= 45
+            self.player.jump_sound.play()
+            time.sleep(0.1)
+        # Don't want player to be able to move back
+
+        # prevents player object from leaving the screen
+        if self.player.center_y > self.height:
+            self.end_game()
+
     def end_game(self):
         """ When called this function removes all the Trucks instances in traffic_list and sets the label
         text to read 'GAME OVER'
@@ -133,53 +165,19 @@ class TheGame(Widget):
         self.end.text = 'GAME OVER'
         self.next_level()
 
-    def help_popup(self):
-        popup = Popup(title='Help', content=Label(text='Instructions'), size_hint=(None, None), size=(400, 300))
-        popup.open()
-
-    def update(self, dt):
-        for t in self.traffic_list:
-            if t.center_x > self.width:
-                t.center_x = -100
-            else:
-                t.center_x += self.speed
-            self.player.truck_collision(t)
-            # t.close_trucks(t)
-
     def next_level(self):
         if self.level == 1:
             self.level += 1
             self.player.center_y = 0
+            self.player.center_x = self.width/2
             self.traffic(self.traffic_list)
             self.speed = 4
             self.end.text = 'Next level!'
-            self.timer == 20
+            self.timer = 20
         else:
-            self.timer == 0
-            # Leaderboard.LeaderboardApp()
-            # multiprocessing.Process(target=Leaderboard.LeaderboardApp().run).start()
-            # Leader board/ server stuff
-
-    def on_touch_move(self, touch):
-        """ This function moves the player controlled object when the object is touched """
-        # moves player right
-        if touch.x > self.player.center_x:
-            self.player.center_x += 45
-            time.sleep(0.1)
-        # moves player up
-        if touch.y > self.player.y:
-            self.player.center_y += 45
-            time.sleep(0.1)
-            self.player.score += 1
-        # moves player left
-        if touch.x < self.player.center_x:
-            self.player.center_x -= 45
-            time.sleep(0.1)
-        # Don't want player to be able to move back
-
-        # prevents player object from leaving the screen
-        if self.player.center_y > self.height:
-            self.end_game()
+            self.timer = 0
+            multiprocessing.Process(target=Leaderboard.LeaderboardApp().run).start()
+            # Calls LeaderboardApp score data not passed over yet
 
 
 class COMP130App(App):
