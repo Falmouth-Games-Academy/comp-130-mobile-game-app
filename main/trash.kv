@@ -4,7 +4,7 @@
     size: 50, 50
     canvas:
         Ellipse:
-            source: "C:\Users\James\Documents\Uni\Kivy App\Pictures\cracker-md.png"
+            source: "C:\Users\james\Documents\GitHub\comp-130-mobile-game-app\Pictures\cracker-md.png"
             pos: self.pos
             size: self.size
 
@@ -12,26 +12,19 @@
     size: 200, 25
     canvas:
         Rectangle:
-            source: "C:\Users\James\Documents\Uni\Kivy App\Pictures\Bin.png"
+            source: "C:\Users\james\Documents\GitHub\comp-130-mobile-game-app\Pictures\Bin.png"
             pos:self.pos
             size:self.size
-
-<Time>:
-    Button:
-        Label:
-            pos:self.pos
-            size:self.size
-            text: elapsed
 
 <TrashGame>:
-    cracker: pong_ball
-    player1: player_left
+    cracker: cracker
+    player: player_left
 
     Label:
         font_size: 50
         center_x: root.width / 15
         center_y: root.height / 1.2
-        text: str(root.player1.score)
+        text: str(root.player.score)
 
     Label:
         font_size: 20
@@ -43,7 +36,7 @@
         font_size: 50
         center_x: root.width / 15
         center_y: root.height / 1.4
-        text: str(root.player1.scoreLoss)
+        text: str(root.player.scoreLoss)
 
     Label:
         font_size: 20
@@ -52,23 +45,10 @@
         text: "Lost"
 
     Cracker:
-        id: pong_ball
+        id: cracker
         center: self.parent.center
 
     TrashCan:
         id: player_left
         x: root.center_y
         y: 0
-
-   # Button:
-     #  font_size: 14
-     #  center_x: root.width / 2
-     #  top: root.top - 150
-     #  text: root.hello_world
-     #  on_press: root.button_pressed()
-
-   # Label:
-     #  font_size: 40
-      # center_x: root.width / 2
-    #   top: root.top - 5
-    #   text: root.hello_world
