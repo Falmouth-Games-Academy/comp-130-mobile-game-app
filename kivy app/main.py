@@ -5,13 +5,14 @@ import Leaderboard
 import multiprocessing
 from kivy.app import App
 from kivy.uix.widget import Widget
-from kivy.properties import NumericProperty
+from kivy.properties import NumericProperty, ReferenceListProperty
 from kivy.clock import Clock
 from kivy.uix.popup import Popup
 from kivy.uix.label import Label
 from kivy.uix.button import Button
 from kivy.core.audio import SoundLoader
 from kivy.uix.image import Image
+from kivy.vector import Vector
 
 # TO DO LIST:
 # Finish leader board pop up & add client server code
@@ -56,7 +57,6 @@ class Trucks(Widget):
             self.image_source = "Resources/blue_truck.png"
         else:
             self.image_source = "Resources/green_truck.png"""""
-
 
 
 class TheGame(Widget):
@@ -115,13 +115,14 @@ class TheGame(Widget):
         :param timer: passes in the current value of timer that's being displayed on screen
         :return:
         """
-        if self.game_over == "False":
+        self.timer -= 1
+        """if self.game_over == "False":
             if self.timer <= 0:
                 self.end_game()
             else:
                 self.timer -= 1
         else:
-            self.timer = 0
+            self.timer = 0"""
 
     def update(self, dt):
         for t in self.traffic_list:
@@ -175,8 +176,9 @@ class TheGame(Widget):
             self.end.text = 'Next level!'
             self.timer = 20
         else:
-            self.timer = 0
+            # self.timer = 0
             multiprocessing.Process(target=Leaderboard.LeaderboardApp().run).start()
+            # multiprocessing.Process(target=Leaderboard.LeaderboardApp(self.level, self.player.score).run).start()
             # Calls LeaderboardApp score data not passed over yet
 
 

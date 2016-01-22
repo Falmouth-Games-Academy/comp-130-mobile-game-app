@@ -18,6 +18,11 @@ class LeaderboardApp(App):
     layout = GridLayout(rows=5)
     drop_down_options = ["Top 10 Scores", "Add New User", "Top scores for user", "Change User Name"]
     URL_choice = "None"
+    """
+    def __init__(self, main_level, main_score):
+        score = main_level
+        level = main_score
+        print score + level"""
 
     def build(self):
 
@@ -42,8 +47,6 @@ class LeaderboardApp(App):
     def got_top_10(self, request, results):
         self.results_label.text = str(results)
 
-    #def choose_request(self):
-
     def callback(self, event):
         playername = self.textinput.text[:3]
         self.textinput.text = playername
@@ -55,6 +58,7 @@ class LeaderboardApp(App):
             self.URL_choice = 'http://bsccg04.ga.fal.io/new_user.py?playername=' + playername
         elif self.dropdown_button.text == "Top scores for user":
             self.URL_choice = 'http://bsccg04.ga.fal.io/users_high_score.py?playername=' + playername
+        # Add other options
 
         print self.URL_choice
 
