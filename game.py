@@ -57,9 +57,9 @@ class PongGame(Widget):
             self.serve_ball(vel=(+4, 0))
         #Ends game when player loses all their lives
         if self.player2.lives == 0 :
-            sys.exit()
+            self.serve_ball(vel=(+0, 0))
         if self.player1.insectLives == 0 :
-            sys.exit()
+            self.serve_ball(vel=(+0, 0))
 
 
     def on_touch_move(self, touch):
