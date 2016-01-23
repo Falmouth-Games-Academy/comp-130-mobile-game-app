@@ -1,0 +1,98 @@
+#:kivy 1.0.9
+
+<Trucks>:
+    size: 100, 50
+    canvas:
+        Rectangle:
+            #source: "Resources/yellow_truck.png"
+            source: self.image_source
+            pos: self.pos
+            size: self.size
+
+
+<PlayerObject>:
+    size: 50, 50
+    canvas:
+        Ellipse:
+            pos:self.pos
+            size:self.size
+
+
+
+<TheGame>:
+    player: player
+    end: end
+    help: help
+    #score:score
+
+    Image:
+        source: "Resources/background2.png"
+        center_x: root.width / 2
+        center_y: root.height / 2
+        size: 800, 800
+
+    Label:
+        font_size: 70
+        center_x: (3*(root.width)) / 4
+        top: root.top
+        text: str(root.player.score)
+
+
+    Label:
+        font_size: 20
+        center_x: (3*root.width) / 4
+        center_y: root.top -10
+        text: "Score:"
+
+    Label:
+        font_size: 20
+        center_x: root.width / 4
+        center_y: root.top -10
+        text: "Level:"
+
+    Label:
+        font_size: 70
+        center_x: root.width / 4
+        top: root.top
+        text: str(root.level)
+
+    Label:
+        font_size: 70
+        center_x: root.width / 2
+        top: root.top
+        text: str(root.timer)
+
+    Label:
+        font_size: 20
+        center_x: root.width / 2
+        center_y: root.top -10
+        text: "Time left:"
+
+    Label:
+        id: end
+        font_size: 50
+        center_x: root.width / 2
+        center_y: root.height / 2
+
+    Button:
+        id: help
+        size: 50, 50
+        font_size: 20
+        x: root.width - 50
+        center_y: root.height - 25
+        text: 'Help'
+        on_press: root.help_popup()
+
+    #Button:
+    #    id: score
+    #    size: 50, 50
+    #    font_size: 20
+    #    x: root.width - 100
+    #    center_y: root.height - 25
+    #    text: 'Score'
+        #on_press: root.help_popup()
+
+    PlayerObject:
+        id: player
+        y: root.y
+        center_x: root.center_x
