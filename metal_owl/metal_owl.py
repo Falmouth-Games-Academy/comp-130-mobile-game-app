@@ -9,6 +9,8 @@ from kivy.uix.image import Image
 from kivy.clock import Clock
 from kivy.uix.label import Label
 from kivy.core.audio import SoundLoader
+from kivy.uix.button import Button
+from kivy.network.urlrequest import UrlRequest
 
 '''
 Set the location and names for each of the sounds.
@@ -22,6 +24,7 @@ Create the main menu and add the background, ground and label.
 Super makes sure the widget is initialised.
 '''
 class Menu(Widget):
+
     def __init__(self):
         super(Menu, self).__init__()
         self.add_widget(Sprite(source="Resources/images/metal_background.png"))
@@ -29,6 +32,8 @@ class Menu(Widget):
         self.add_widget(Ground(source="Resources/images/metal_ground.png"))
         self.add_widget(Label(center=self.center, text="METAL" + "\n" + " GEAR" + "\n" + " OWL"))
         self.add_widget(Label(pos=(self.center_x-44, self.center_y-140), text="Tap to start"))
+
+
     '''
     When the user pressed down on touch screen or mouse click remove the main menu widget and add the game widget.
     '''
@@ -36,6 +41,31 @@ class Menu(Widget):
         parent = self.parent
         parent.remove_widget(self)
         parent.add_widget(Game())
+
+class Scores(Widget):
+
+    def __init__(self):
+        super(Scores, self).__init__()
+        self.add_widget(Sprite(source="Resources/images/metal_background.png"))
+        self.size = self.children[0].size
+        btn = Button(pos=(self.center_x-40, self.center_y), text="Get Highscore", font_size=4)
+        btn.bind(on_press=self.callback)
+        self.add_widget(btn)
+
+        self.label=Label(pos=(self.center_x, self.center_y-40), text="Doesn't work", font_size='14sp')
+        self.add_widget(self.label)
+        self.add_widget(Ground(source="Resources/images/metal_ground.png"))
+
+    def got_database(self, request, results):
+        self.label.text(results)
+
+    def callback(self, event):
+        request = UrlRequest('http://bsccg03.ga.fal.io/?request=top_score', self.got_database)
+
+    #def on_touch_down(self, *ignore):
+        #parent = self.parent
+        #parent.remove_widget(self)
+        #parent.add_widget(Menu())
 
 '''
 Set the class sprite as an image and name the size of it the size of the texture of the image.
@@ -256,8 +286,8 @@ class Game(Widget):
     def _on_touch_down(self, *ignore):
         parent = self.parent
         parent.remove_widget(self)
-        #parent.add_scores(Scores())
-        parent.add_widget(Menu())
+        parent.add_widget(Scores())
+        #parent.add_widget(Menu())
 
 '''
 This is the game app.
