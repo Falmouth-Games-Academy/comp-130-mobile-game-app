@@ -1,0 +1,478 @@
+#:kivy 1.9.0
+
+#:import random random
+
+#:import direction direction
+
+
+#: set FPS 60
+
+
+<HotrodGame>
+    #So that children can access in python code
+    id: root_game
+
+    heads_up_display: hud
+    play_area: play_area_id
+    level: level_id
+
+    player: player_beetle_id
+    red_enemy: red_beetle
+    pink_enemy: pink_beetle
+    blue_enemy: blue_beetle
+    orange_enemy: orange_beetle
+    enemies: [self.red_enemy, self.pink_enemy, self.blue_enemy, self.orange_enemy]
+
+    hud_width: self.width - self.height
+
+    PlayArea:
+        id: play_area_id
+        game: root_game
+
+        size: self.game.height, self.game.height
+        pos: (self.game.hud_width, 0)
+
+        PlayerBeetle:
+            id: player_beetle_id
+            game: root_game
+
+            # Player starts in bottom left corner
+            start_x: 0
+            start_y: 0
+            start_position: self.start_x, self.start_y
+            speed: self.game.level.cell_size[0] * 1.0 / FPS * self.game.speed_multiplier
+
+        RedBeetle:
+            id: red_beetle
+            game: root_game
+
+            activation_timer: 0
+            speed: self.game.level.cell_size[0] * 1.0 / FPS * self.game.speed_multiplier
+
+        PinkBeetle:
+            id: pink_beetle
+            game: root_game
+
+            activation_timer: 10
+            speed: self.game.level.cell_size[0] * 1.0 / FPS * self.game.speed_multiplier
+
+        BlueBeetle:
+            id: blue_beetle
+            game: root_game
+
+            activation_timer: 20
+            speed: self.game.level.cell_size[0] * 1.0 / FPS * self.game.speed_multiplier
+
+        OrangeBeetle:
+            id: orange_beetle
+            game: root_game
+
+            flee_distance: 4
+            activation_timer: 30
+            speed: self.game.level.cell_size[0] * 1.0 / FPS * self.game.speed_multiplier
+
+        Level:
+            id: level_id
+            game: root_game
+
+            columns: 8
+            rows: 8
+
+            size: self.parent.height, self.parent.width
+            pos: self.parent.pos
+
+            cell_size: (self.height/self.rows, self.height/self.rows)
+            # Initialise 2-dimensional list of correct size
+            cells: [[None for i in range(self.rows)] for i in range(self.columns)]
+
+    HeadsUpDisplay:
+        id: hud
+        game: root_game
+
+        score_label: score
+        lives_label: lives
+
+        height: self.game.height
+        width: self.game.hud_width
+
+        FloatLayout:
+            canvas:
+                Color:
+                    rgb: 0, 0, 0
+                Rectangle:
+                    pos: self.pos
+                    size: self.size
+
+            HUDText:
+                id: name
+                game: root_game
+                pos_hint: {'x': 0.1, 'top': 0.9}
+                text: "Name: " + str(self.game.player_name)
+
+            HUDText:
+                id: level
+                game: root_game
+                pos_hint: {'x': 0.1, 'top': 0.8}
+                text: "Level: " + str(self.game.level_number)
+
+            HUDText:
+                id: level
+                game: root_game
+                pos_hint: {'x': 0.1, 'top': 0.7}
+                text: "Speed: " + str(self.game.speed_multiplier)
+
+            HUDText:
+                id: lives
+                game: root_game
+                pos_hint: {'x': 0.1, 'top': 0.6}
+                text: "Lives: " + str(self.game.lives)
+
+            HUDText:
+                id: score
+                game: root_game
+                pos_hint: {'x': 0.1, 'top': 0.5}
+                text: "Score: " + str(self.game.score)
+
+
+<Cell>
+    left_edge: left_edge_id
+    right_edge: right_edge_id
+    bottom_edge: bottom_edge_id
+    top_edge: top_edge_id
+    pellet: pellet_id
+
+    # Size of cell within the walls
+    interior: (self.width - self.width * self.wall_thickness * 2, self.height - self.height * self.wall_thickness * 2)
+    edges: [self.left_edge, self.bottom_edge, self.right_edge, self.top_edge]
+
+    sides: 4
+    wall_thickness: 0.1
+
+    CellEdge:
+        id: left_edge_id
+        direction: direction.Direction.left
+
+    CellEdge:
+        id: bottom_edge_id
+        direction: direction.Direction.down
+
+    CellEdge:
+        id: right_edge_id
+        direction: direction.Direction.right
+
+    CellEdge:
+        id: top_edge_id
+        direction: direction.Direction.up
+
+    Pellet:
+        id: pellet_id
+
+
+<PlayerBeetle>
+    normal_image: "images/hotrod.png"
+    power_image: "images/power.png"
+
+    canvas:
+        PushMatrix
+        Rotate:
+            origin: self.center
+            # Because the image has the character facing up
+            angle: self.rotation_angle + 90
+        Rectangle:
+            source: self.source_image
+            pos: self.pos
+            size: self.size
+        PopMatrix
+
+
+<EnemyBeetle>
+    frightened_image: "images/frightened.png"
+
+
+<RedBeetle>
+    normal_image: "images/red.png"
+
+    canvas:
+        PushMatrix
+        Rotate:
+            origin: self.center
+            # Because the image has the character facing up
+            angle: self.rotation_angle + 90
+        Rectangle:
+            source: self.source_image
+            pos: self.pos
+            size: self.size
+        PopMatrix
+
+
+<PinkBeetle>
+    normal_image: "images/pink.png"
+
+    canvas:
+        PushMatrix
+        Rotate:
+            origin: self.center
+            # Because the image has the character facing up
+            angle: self.rotation_angle + 90
+        Rectangle:
+            source: self.source_image
+            pos: self.pos
+            size: self.size
+        PopMatrix
+
+
+<BlueBeetle>
+    normal_image: "images/blue.png"
+
+    canvas:
+        PushMatrix
+        Rotate:
+            origin: self.center
+            # Because the image has the character facing up
+            angle: self.rotation_angle + 90
+        Rectangle:
+            source: self.source_image
+            pos: self.pos
+            size: self.size
+        PopMatrix
+
+
+<OrangeBeetle>
+    normal_image: "images/orange.png"
+
+    canvas:
+        PushMatrix
+        Rotate:
+            origin: self.center
+            # Because the image has the character facing up
+            angle: self.rotation_angle + 90
+        Rectangle:
+            source: self.source_image
+            pos: self.pos
+            size: self.size
+        PopMatrix
+
+
+<CellEdge>
+    # So that walls overlap on the outside of corners
+    height: self.parent.height + (2 * self.parent.height * self.parent.wall_thickness)
+    width: self.parent.width * self.parent.wall_thickness
+    pos: (self.parent.pos[0], self.parent.pos[1] - self.parent.height * self.parent.wall_thickness)
+
+
+<Wall>
+    rotation: 0
+    rotation_origin: 0, 0
+
+    canvas:
+        Color:
+            rgb: (0.3, 0.1, 0.1)
+        PushMatrix
+        Rotate:
+            angle: self.rotation
+            origin: self.rotation_origin
+        Rectangle:
+            pos: self.pos
+            size: self.size
+        PopMatrix
+
+
+<Pellet>
+    color: 0, 0, 0
+
+    canvas:
+        Color:
+            rgb: self.color
+        Ellipse:
+            pos: self.pos
+            size: self.size
+
+# Values used in all user interface widgets below are just what worked
+<GameOverScreen>
+    reset_button: reset
+    game_over_text: game_over_text
+
+    player_score_text: score_text
+    best_score_text: best_text
+    level_number_text: level_text
+    high_scores_text: high_scores
+
+    BoxLayout:
+        orientation: 'horizontal'
+        canvas:
+            Color:
+                rgba: 0, 0, 0, 1
+            Rectangle:
+                pos: self.pos
+                size: self.size
+
+        FloatLayout:
+            TitleText:
+                id: game_over_text
+
+                text: "Game over!"
+                font_size: self.width / len(self.text) * 2
+
+            Button:
+                id: reset
+                size_hint: (0.9, 0.2)
+                pos_hint: {'center_x': 0.5, 'center_y': 0.3}
+                background_normal: ''
+                background_color: (0.9, 0, 0, 1)
+
+                font_size: self.height / 2
+                color: (0, 0, 0, 1)
+                text: "Restart"
+
+        FloatLayout:
+            TitleText:
+                id: score_text
+                text: 'score'
+                pos_hint: {'center_x': 0.5, 'top': 1}
+                font_size: self.width / len(self.text) * 2
+
+            TitleText:
+                id: best_text
+                text: 'Getting best...'
+                pos_hint: {'center_x': 0.5, 'top': 0.85}
+                font_size: self.width / len(self.text)
+                color: (0.9, 0, 0, 1)
+
+            TitleText:
+                id: level_text
+                text: 'level'
+                pos_hint: {'center_x': 0.5, 'top': 0.8}
+                font_size: self.width / len(self.text)
+
+            HUDText:
+                id: high_scores
+                halign: 'center'
+                pos_hint: {'center_x': 0.5, 'top': 0.6}
+                # It just works
+                font_size: self.width / 20
+                text: ' '
+
+<StartScreen>
+    start_button: start
+    hotrod_logo: logo
+
+    FloatLayout:
+        canvas:
+            Color:
+                rgba: 0, 0, 0, 1
+            Rectangle:
+                pos: self.pos
+                size: self.size
+            Color:
+                rgba: 1, 1, 1, 1
+            Rectangle:
+                source: "images/hotrod.png"
+                # Centres the image
+                pos: ((self.width - self.height) / 2, 0)
+                size: self.height, self.height
+
+        TitleText:
+            id: logo
+            text: "Hotrod the Beetle"
+            font_size: self.width / len(self.text) * 2
+
+        Button:
+            id: start
+            size_hint: (0.25, 0.2)
+            pos_hint: {'center_x': 0.5, 'center_y': 0.3}
+            background_normal: ''
+            background_color: (0.9, 0, 0, 1)
+
+            font_size: self.height / 2
+            color: (0, 0, 0, 1)
+            text: "Start"
+
+
+<LoginScreen>
+    new_button: new
+    existing_button: existing
+    instruction_text: instruction
+    name_text: name
+
+    FloatLayout:
+        canvas:
+            Color:
+                rgba: 0, 0, 0, 1
+            Rectangle:
+                pos: self.pos
+                size: self.size
+
+        TitleText:
+            id: instruction
+            text: "Enter your name!"
+            font_size: self.width / len(self.text) * 2
+
+        BoxLayout:
+            orientation: 'vertical'
+            pos_hint: {'center_x': 0.5, 'top': 0.5}
+            size_hint_x: 1
+            size_hint_y: 0.5
+
+            NameInput:
+                id: name
+                hint_text: "name"
+                pos_hint: {'center_x': 0.5, 'top': 1}
+                size_hint: (0.5, 1)
+
+            BoxLayout:
+                orientation: 'horizontal'
+
+                Button:
+                    id: new
+                    size_hint: (1, 1)
+                    background_normal: ''
+                    background_color: (0.9, 0, 0, 1)
+
+                    font_size: self.height / 2
+                    color: (0, 0, 0, 1)
+                    text: "New user"
+
+                Button:
+                    id: existing
+                    size_hint: (1, 1)
+                    background_normal: ''
+                    background_color: (0.9, 0.9, 0, 1)
+
+                    font_size: self.height / 2
+                    color: (0, 0, 0, 1)
+                    text: "Log in"
+
+
+<NameInput>
+    multiline: False
+    cursor_color: (1, 0, 0, 1)
+    background_color: (0, 0, 0, 1)
+    foreground_color: (1, 1, 0, 1)
+    font_size: self.height
+
+    canvas.after:
+        Color:
+            rgb: 1, 1, 0
+        Line:
+            rectangle: self.x,self.y,self.width,self.height
+
+
+<HUDText>
+    size_hint_x: 1
+    size_hint_y: None
+    color: (0.9, 0.9, 0, 1)
+    text_size: self.width, None
+    font_size: self.width / 8
+    height: self.texture_size[1]
+
+
+<TitleText>
+    pos_hint: {'center_x': 0.5, 'top': 0.9}
+    size_hint_x: 0.9
+    size_hint_y: None
+
+    text_size: self.width, None
+    height: self.texture_size[1]
+    halign: 'center'
+    color: (0.9, 0.9, 0, 1)
+
