@@ -1,0 +1,54 @@
+#:kivy 1.0.9
+
+<Cracker>:
+    size: 50, 50
+    canvas:
+        Ellipse:
+            source: "C:\Users\james\Documents\GitHub\comp-130-mobile-game-app\Pictures\cracker-md.png"
+            pos: self.pos
+            size: self.size
+
+<TrashCan>:
+    size: 200, 25
+    canvas:
+        Rectangle:
+            source: "C:\Users\james\Documents\GitHub\comp-130-mobile-game-app\Pictures\Bin.png"
+            pos:self.pos
+            size:self.size
+
+<TrashGame>:
+    cracker: cracker
+    player: player_left
+
+    Label:
+        font_size: 50
+        center_x: root.width / 15
+        center_y: root.height / 1.2
+        text: str(root.player.score)
+
+    Label:
+        font_size: 20
+        center_x: root.width / 15
+        center_y: root.height / 1.1
+        text: "Caught"
+
+    Label:
+        font_size: 50
+        center_x: root.width / 15
+        center_y: root.height / 1.4
+        text: str(root.player.score_loss)
+
+    Label:
+        font_size: 20
+        center_x: root.width / 15
+        center_y: root.height / 1.3
+        text: "Lost"
+
+    Cracker:
+        id: cracker
+        center: self.parent.center
+
+    TrashCan:
+        id: player_left
+        x: root.center_y
+        y: 0
