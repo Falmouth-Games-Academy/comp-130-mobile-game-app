@@ -114,15 +114,6 @@ class TrashGame(Widget):
         if touch.y < self.width:
             self.player.center_x = touch.x
 
-# To be used later
-#class Online(Widget):
-
-     #def update_string(self, req, results):
-        # self.hello_world = results
-
-     #def button_pressed(self):
-         #req = UrlRequest("http://bsccg06.ga.fal.io/hello_world/?user=Class", self.update_string)
-
 
 class TrashApp(App):
     def build(self):
