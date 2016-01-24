@@ -1,6 +1,7 @@
 # import all these things so that the .pv file can access them
 
 import random # import random allows for random generation of values
+import json
 
 from kivy.app import App
 from kivy.uix.widget import Widget
@@ -45,12 +46,12 @@ class Menu(Widget):
         parent.add_widget(Game())
 
 class Highscores(Widget):
-    def __init__(self, **kwargs):
+    def __init__(self):
         #super(Highscores, self).__init__()
         layout = GridLayout(rows=3)
-        btn =  Button(text='Button', font_size=120)
+        btn = Button(text='Button', font_size=120)
         btn.bind(on_press=self.callback)
-        self.label = Label(text="------------", font_size='14sp')
+        self.label = Label(text="?", font_size='14sp')
         layout.add_widget(btn)
         layout.add_widget(self.label)
         return layout
@@ -67,24 +68,71 @@ class Scores(Widget):
         super(Scores, self).__init__()
         self.add_widget(Sprite(source="Resources/images/metal_background.png"))
         self.size = self.children[0].size
-        btn = Button(pos=(self.center_x-40, self.center_y), text="Get Highscore", font_size=4)
-        btn.bind(on_press=self.callback)
-        self.add_widget(btn)
 
-        self.label=Label(pos=(self.center_x, self.center_y-40), text="Doesn't work", font_size='14sp')
-        self.add_widget(self.label)
+        #self.btn = Button(pos=(self.center_x-120, self.center_y+90), text="Get Highscore", font_size=4, size=(240,50))
+        #self.btn.bind(on_press=self.callback_top_score)
+        #self.add_widget(self.btn)
+
+
+        self.add_widget(Sprite(source="Resources/images/metal_background.png"))
         self.add_widget(Ground(source="Resources/images/metal_ground.png"))
 
-    def got_database(self, request, results):
-        self.label.text(results)
+        self.btn_top_score = Button(pos=(self.center_x-120, self.center_y+90), text="Get Highscore", font_size=4, size=(240,50))
+        self.btn_top_score.bind(on_press=self.callback_top_score)
+        self.add_widget(self.btn_top_score)
 
-    def callback(self, event):
-        request = UrlRequest('http://bsccg03.ga.fal.io/?request=top_score', self.got_database)
+        self.btn_top_scores = Button(pos=(self.center_x-120, self.center_y+40), text="Get Top 10", font_size=4, size=(240,50))
+        self.btn_top_scores.bind(on_press=self.callback_top_scores)
+        self.add_widget(self.btn_top_scores)
 
-    #def on_touch_down(self, *ignore):
-        #parent = self.parent
-        #parent.remove_widget(self)
-        #parent.add_widget(Menu())
+        self.btn_next = Button(pos=(self.center_x-120, self.center_y+40), text="Next", font_size=4, size=(240,50))
+        self.btn_next.bind(on_press=self.change)
+        self.add_widget(self.btn_next)
+
+        '''
+        self.label_top_score=Label(pos=(self.center_x-40, self.center_y+90), text="Doesn't work", font_size='14sp')
+        self.add_widget(self.label_top_score)
+        '''
+
+        #first_name_top_score
+        self.label_top_scores_first=Label(pos=(self.center_x-140, self.center_y-90), text="", font_size='14sp')
+        self.add_widget(self.label_top_scores_first)
+
+        #last_name_top_score
+        self.label_top_scores_last=Label(pos=(self.center_x-40, self.center_y-90), text="", font_size='14sp')
+        self.add_widget(self.label_top_scores_last)
+
+        #score_name_top_score
+        self.label_top_scores_score=Label(pos=(self.center_x+40, self.center_y-90), text="", font_size='14sp')
+        self.add_widget(self.label_top_scores_score)
+
+    def got_database_top_score(self, request, results):
+        self.btn_top_score.text=results
+
+    def callback_top_score(self, event):
+        request = UrlRequest('http://bsccg03.ga.fal.io/?request=top_score', self.got_database_top_score)
+
+    def got_database_top_scores(self, request, results):
+        print(results)
+
+        parse_json = json.loads(results)
+        print(parse_json)
+
+        #first_name
+        first="\n".join(str(result[0]) for result in parse_json)
+        self.label_top_scores_first.text=first
+
+        #last_name
+        last="\n".join(str(result[1]) for result in parse_json)
+        self.label_top_scores_last.text=last
+
+        #score
+        score="\n".join(str(result[2]) for result in parse_json)
+        self.label_top_scores_score.text=score
+
+
+    def callback_top_scores(self, event):
+        request = UrlRequest('http://bsccg03.ga.fal.io/?request=top_scores', self.got_database_top_scores)
 
 '''
 Set the class sprite as an image and name the size of it the size of the texture of the image.
