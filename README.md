@@ -16,8 +16,7 @@ The current build has improved on the tutorial by:
 -restricted players to not move out of screen  
 -change graphics of ground and background  
 
-#To do:  
--limited number of flaps  
--on screen collectables to boost stamina  
--in air projectiles for obsticles  
--platforms for player to be reset flaps/rest  
+#Audio:
+Owl_music.wav was created by me.
+score.wav is royalty free from http://soundbible.com/free-sound-effects-1.html
+flap.wav was royalty free from https://www.youtube.com/watch?v=U14P8gtjQmU 
