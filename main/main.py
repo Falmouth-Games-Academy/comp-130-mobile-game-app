@@ -1,4 +1,4 @@
-# Author James Hellman
+# Author 1506530
 # Sourcecode from kivy Pong
 from kivy.app import App
 from kivy.uix.widget import Widget
