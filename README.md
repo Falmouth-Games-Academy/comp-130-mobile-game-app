@@ -33,7 +33,7 @@ I didn't finish randomly generating the trucks in this sprint so they've been mo
 
 ####Sprint 3:
 ![Sprint 3](https://raw.githubusercontent.com/MaddieK19/comp-130-mobile-game-app/master/Trello%20Board%20and%20Cards/Sprint%203.PNG)  
-The trucks are now randomly generated that only task not achieved in this sprint was to make the game end when the timer reached zero, that task has been moved to the next sprint.
+The trucks are now randomly generated, the only task not achieved in this sprint was to make the game end when the timer reached zero, that task has been moved to the next sprint.
 
 ####Sprint 4:
 ![Sprint 4](https://raw.githubusercontent.com/MaddieK19/comp-130-mobile-game-app/master/Trello%20Board%20and%20Cards/Sprint%204.PNG)  
