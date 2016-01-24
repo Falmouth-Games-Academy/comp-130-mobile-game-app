@@ -11,6 +11,8 @@ from kivy.uix.label import Label
 from kivy.core.audio import SoundLoader
 from kivy.uix.button import Button
 from kivy.network.urlrequest import UrlRequest
+from kivy.uix.boxlayout import BoxLayout
+from kivy.uix.gridlayout import GridLayout
 
 '''
 Set the location and names for each of the sounds.
@@ -41,6 +43,23 @@ class Menu(Widget):
         parent = self.parent
         parent.remove_widget(self)
         parent.add_widget(Game())
+
+class Highscores(Widget):
+    def __init__(self, **kwargs):
+        #super(Highscores, self).__init__()
+        layout = GridLayout(rows=3)
+        btn =  Button(text='Button', font_size=120)
+        btn.bind(on_press=self.callback)
+        self.label = Label(text="------------", font_size='14sp')
+        layout.add_widget(btn)
+        layout.add_widget(self.label)
+        return layout
+
+    def got_database(self, request, results):
+        self.label.text = results
+
+    def callback(self, event):
+        request = UrlRequest('http://bsccg03.ga.fal.io/?request=top_score', self.got_database)
 
 class Scores(Widget):
 
@@ -286,6 +305,7 @@ class Game(Widget):
     def _on_touch_down(self, *ignore):
         parent = self.parent
         parent.remove_widget(self)
+        #parent.add_widget(Highscores())
         parent.add_widget(Scores())
         #parent.add_widget(Menu())
 
