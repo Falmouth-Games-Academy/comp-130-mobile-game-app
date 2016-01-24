@@ -63,7 +63,7 @@ class TheGame(Widget):
 
     def help_button(self):
         """ Creates a pop up when called that displays instructions on how to play game."""
-        popup = Popup(title='Help', content=Label(text='Instructions'), size_hint=(None, None), size=(400, 300))
+        popup = Popup(title='Help', content=Label(text='Drag the circle in the direction you want to go.' ), size_hint=(None, None), size=(400, 300))
         popup.open()
 
     def get_coordinates(self):
