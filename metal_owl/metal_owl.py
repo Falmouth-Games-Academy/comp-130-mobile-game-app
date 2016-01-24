@@ -12,18 +12,18 @@ from kivy.uix.label import Label # import kivy label
 from kivy.core.audio import SoundLoader # import sound usage
 
 # set the sound source
-sfx_flap = SoundLoader.load("Resources/kivy-game-dev/flappy/audio/flap.wav")
-sfx_score = SoundLoader.load("Resources/kivy-game-dev/flappy/audio/score.wav")
-sfx_die = SoundLoader.load("Resources/kivy-game-dev/flappy/audio/Owl_music.wav")
+sfx_flap = SoundLoader.load("Resources/audio/flap.wav")
+sfx_score = SoundLoader.load("Resources/audio/score.wav")
+sfx_die = SoundLoader.load("Resources/audio/Owl_music.wav")
 
 # create the main menu using the widget to add the background, ground, label
 # super makes sure the widget is initialised
 class Menu(Widget):
     def __init__(self):
         super(Menu, self).__init__()
-        self.add_widget(Sprite(source="Resources/kivy-game-dev/flappy/images/metal_background.png"))
+        self.add_widget(Sprite(source="Resources/images/metal_background.png"))
         self.size = self.children[0].size
-        self.add_widget(Ground(source="Resources/kivy-game-dev/flappy/images/metal_ground.png"))
+        self.add_widget(Ground(source="Resources/images/metal_ground.png"))
         self.add_widget(Label(center=self.center, text="METAL" + "\n" + " GEAR" + "\n" + " OWL"))
         #self.add_widget(Label(pos=(self.center_x-44, self.center_y+4), text="METAL" + "\n" + " GEAR" + "\n" + " OWL"))
         self.add_widget(Label(pos=(self.center_x-44, self.center_y-140), text="Tap to start"))
@@ -45,10 +45,10 @@ class Sprite(Image):
 class Pipe(Widget):
     def __init__(self, pos):
         super(Pipe, self).__init__(pos=pos)
-        self.top_image = Sprite(source="Resources/kivy-game-dev/flappy/images/spike_top.png")
+        self.top_image = Sprite(source="Resources/images/spike_top.png")
         self.top_image.pos = (self.x, self.y + 99)
         self.add_widget(self.top_image)
-        self.bottom_image = Sprite(source="Resources/kivy-game-dev/flappy/images/spike_bottom.png")
+        self.bottom_image = Sprite(source="Resources/images/spike_bottom.png")
         self.bottom_image.pos = (self.x, self.y - 340)#- self.bottom_image.height)
         self.add_widget(self.bottom_image)
         self.width = self.bottom_image.width
@@ -109,7 +109,7 @@ class Background(Widget):
 # initial value of velocity is set to 0 and gravity is -0.3
 class Bird(Sprite):
     def __init__(self, pos):
-        super(Bird, self).__init__(source="atlas://Resources/kivy-game-dev/flappy/images/owl_anim/wing-up", pos=pos)
+        super(Bird, self).__init__(source="atlas://Resources/images/owl_anim/wing-up", pos=pos)
         self.velocity_y = 0
         self.gravity = -.3
         #self.grounded = False
@@ -121,15 +121,15 @@ class Bird(Sprite):
         self.velocity_y = max(self.velocity_y, -10)
         self.y += self.velocity_y
         if self.velocity_y < -4:
-            self.source = "atlas://Resources/kivy-game-dev/flappy/images/owl_anim/wing-up" #"Resources/kivy-game-dev/flappy/images/owl.png" "atlas://Resources/kivy-game-dev/flappy/images/bird_anim/wing-up"
+            self.source = "atlas://Resources/images/owl_anim/wing-up" #"Resources/kivy-game-dev/flappy/images/owl.png" "atlas://Resources/kivy-game-dev/flappy/images/bird_anim/wing-up"
         elif self.velocity_y < 0:
-            self.source = "atlas://Resources/kivy-game-dev/flappy/images/owl_anim/wing-mid" #"Resources/kivy-game-dev/flappy/images/owl.png"  "atlas://Resources/kivy-game-dev/flappy/images/bird_anim/wing-mid"
+            self.source = "atlas://Resources/images/owl_anim/wing-mid" #"Resources/kivy-game-dev/flappy/images/owl.png"  "atlas://Resources/kivy-game-dev/flappy/images/bird_anim/wing-mid"
 
 # when clicked set the velocity and change the bird image and make flap sound
 # on event the velocity is set to 5.5
     def on_touch_down(self, *ignore):
         self.velocity_y = 5.5
-        self.source = "atlas://Resources/kivy-game-dev/flappy/images/owl_anim/wing-down" # "Resources/kivy-game-dev/flappy/images/owl.png"  "atlas://Resources/kivy-game-dev/flappy/images/bird_anim/wing-down"
+        self.source = "atlas://Resources/images/owl_anim/wing-down" # "Resources/kivy-game-dev/flappy/images/owl.png"  "atlas://Resources/kivy-game-dev/flappy/images/bird_anim/wing-down"
         sfx_flap.play()
 
 
@@ -156,10 +156,10 @@ class Ground(Sprite):
 class Game(Widget):
     def __init__(self):
         super(Game, self).__init__()
-        self.background = Background(source="Resources/kivy-game-dev/flappy/images/metal_background.png")
+        self.background = Background(source="Resources/images/metal_background.png")
         self.size = self.background.size
         self.add_widget(self.background)
-        self.ground = Ground(source="Resources/kivy-game-dev/flappy/images/metal_ground.png")
+        self.ground = Ground(source="Resources/images/metal_ground.png")
         self.pipes = Pipes(pos=(0, self.ground.height), size=self.size)
         self.add_widget(self.pipes)
         self.add_widget(self.ground)
@@ -237,7 +237,7 @@ class Game(Widget):
 
 
 # call as the app where the top widget called is the menu with the window size set to it's game size
-class GameApp(App):
+class Metal_OwlApp(App):
     def build(self):
         #return Game(size=Window.size)
         #return Game()
@@ -249,4 +249,4 @@ class GameApp(App):
         #return game
 
 if __name__ == "__main__":
-    GameApp().run()
+    Metal_OwlApp().run()
