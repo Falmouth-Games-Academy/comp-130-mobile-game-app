@@ -23,7 +23,6 @@
     player: player
     end: end
     help: help
-    #score:score
 
     Image:
         source: "Resources/background2.png"
@@ -81,16 +80,7 @@
         x: root.width - 50
         center_y: root.height - 25
         text: 'Help'
-        on_press: root.help_popup()
-
-    #Button:
-    #    id: score
-    #    size: 50, 50
-    #    font_size: 20
-    #    x: root.width - 100
-    #    center_y: root.height - 25
-    #    text: 'Score'
-        #on_press: root.help_popup()
+        on_press: root.help_button()
 
     PlayerObject:
         id: player

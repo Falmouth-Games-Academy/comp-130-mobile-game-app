@@ -6,7 +6,7 @@ import Leaderboard
 import multiprocessing
 from kivy.app import App
 from kivy.uix.widget import Widget
-from kivy.properties import NumericProperty
+from kivy.properties import NumericProperty, StringProperty
 from kivy.clock import Clock
 from kivy.uix.popup import Popup
 from kivy.uix.label import Label
@@ -14,18 +14,7 @@ from kivy.uix.button import Button
 from kivy.core.audio import SoundLoader
 from kivy.uix.image import Image
 from kivy.uix.screenmanager import ScreenManager, Screen
-
-####### TO DO LIST ####
-# Finish Leaderboard.py
-# FIX TIMER/LEADERBOARD PROBLEM
-# Add images/sprites/truck colour change
-# Add time bonus to score
-
-# Tidy on server side
-# Screen manger
-# Sort Trello cards (mountain goat software)
-# Screenshots of each sprint
-# fix variable names
+from kivy.uix.button import Button
 
 INITIAL_RUNTIME = 30
 SCORE = 0
@@ -50,9 +39,15 @@ class PlayerObject(Widget):
 
 
 class Trucks(Widget):
-    """ Truck object"""
-    truck_colours = ["Resources/yellow_truck.png", "Resources/blue_truck.png"]
-    image_source = random.choice(truck_colours)
+    """ This is the class for the truck object. When an instance of this class is created one of the four coloured
+    trucks is randomly chosen and displayed on screen"""
+    image_source = StringProperty()
+
+    def __init__(self, **kwargs):
+        super(Trucks, self).__init__(**kwargs)
+        truck_colours = ["Resources/yellow_truck.png", "Resources/blue_truck.png", "Resources/red_truck.png",
+                         "Resources/green_truck.png"]
+        self.image_source = random.choice(truck_colours)
 
 
 class TheGame(Widget):
@@ -79,11 +74,11 @@ class TheGame(Widget):
         :return: options
         """
         if self.width_or_height == "width":
-            window_dimension = self.width
+            self.window_dimension = self.width
         elif self.width_or_height == "height":
-            window_dimension = self.height - 100
+            self.window_dimension = self.height - 100
             # the -100 prevents trucks from spawning over the timer/level/score
-        size = int(window_dimension / 100)
+        size = int(self.window_dimension / 100)
         position = 100
         options = []
         for i in range(size):
@@ -101,9 +96,11 @@ class TheGame(Widget):
             truck = Trucks()
             self.width_or_height = "height"
             y_options = self.get_coordinates()
+            print y_options
             y_choice = random.choice(y_options)
             self.width_or_height = "width"
             x_options = self.get_coordinates()
+            print x_options
             x_choice = random.choice(x_options)
             truck.center_x = x_choice
             truck.center_y = y_choice
@@ -178,17 +175,39 @@ class TheGame(Widget):
             self.end.text = 'Next level!'
             self.timer = 20
         else:
-            # Calls LeaderboardApp
-            multiprocessing.Process(target=Leaderboard.LeaderboardApp().run).start()
+            #multiprocessing.Process(target=Leaderboard.LeaderboardApp().run).start()
+            App.get_running_app().screens.current = 'high_score'
+
+
+class GameScreen(Screen):
+    def __init__(self, **kwargs):
+        super(GameScreen, self).__init__(**kwargs)
+        self.game = TheGame()
+        Clock.schedule_interval(self.game.update, 1.0 / 60.0)
+        Clock.schedule_interval(self.game.the_timer, 1.0)
+        Clock.schedule_once(self.game.traffic)
+        self.add_widget(self.game)
+
+
+class HighScoreScreen(Screen):
+    def __init__(self, **kwargs):
+        super(HighScoreScreen, self).__init__(**kwargs)
+        self.the_layout = Leaderboard.LeaderBoardLayout()
+        #self.the_layout.create_layout()
+        #self.add_widget(self.the_layout)
 
 
 class COMP130App(App):
     def build(self):
-        game = TheGame()
-        Clock.schedule_interval(game.update, 1.0 / 60.0)
-        Clock.schedule_interval(game.the_timer, 1.0)
-        Clock.schedule_once(game.traffic)
-        return game
+        self.screens = self.create_screens()
+        return self.screens
+
+    def create_screens(self):
+        screen_manager = ScreenManager()
+        screen_manager.add_widget(GameScreen(name='game'))
+        screen_manager.add_widget(HighScoreScreen(name='high_score'))
+        return screen_manager
+
 
 if __name__ == '__main__':
     COMP130App().run()
