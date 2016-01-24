@@ -10,9 +10,7 @@ from kivy.properties import NumericProperty, StringProperty
 from kivy.clock import Clock
 from kivy.uix.popup import Popup
 from kivy.uix.label import Label
-from kivy.uix.button import Button
 from kivy.core.audio import SoundLoader
-from kivy.uix.image import Image
 from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.uix.button import Button
 
@@ -96,11 +94,9 @@ class TheGame(Widget):
             truck = Trucks()
             self.width_or_height = "height"
             y_options = self.get_coordinates()
-            print y_options
             y_choice = random.choice(y_options)
             self.width_or_height = "width"
             x_options = self.get_coordinates()
-            print x_options
             x_choice = random.choice(x_options)
             truck.center_x = x_choice
             truck.center_y = y_choice
@@ -175,12 +171,13 @@ class TheGame(Widget):
             self.end.text = 'Next level!'
             self.timer = 20
         else:
-            #multiprocessing.Process(target=Leaderboard.LeaderboardApp().run).start()
-            App.get_running_app().screens.current = 'high_score'
+            multiprocessing.Process(target=Leaderboard.LeaderBoardApp().run).start()
+            # App.get_running_app().screens.current = 'high_score'
 
 
 class GameScreen(Screen):
     def __init__(self, **kwargs):
+        """ Adds an instance of TheGame to a screen to be used by a screen manager"""
         super(GameScreen, self).__init__(**kwargs)
         self.game = TheGame()
         Clock.schedule_interval(self.game.update, 1.0 / 60.0)
@@ -188,13 +185,13 @@ class GameScreen(Screen):
         Clock.schedule_once(self.game.traffic)
         self.add_widget(self.game)
 
-
+"""
 class HighScoreScreen(Screen):
     def __init__(self, **kwargs):
         super(HighScoreScreen, self).__init__(**kwargs)
         self.the_layout = Leaderboard.LeaderBoardLayout()
-        #self.the_layout.create_layout()
-        #self.add_widget(self.the_layout)
+        self.the_layout.create_layout()
+        self.add_widget(self.the_layout)"""
 
 
 class COMP130App(App):
@@ -205,7 +202,7 @@ class COMP130App(App):
     def create_screens(self):
         screen_manager = ScreenManager()
         screen_manager.add_widget(GameScreen(name='game'))
-        screen_manager.add_widget(HighScoreScreen(name='high_score'))
+        # screen_manager.add_widget(HighScoreScreen(name='high_score'))
         return screen_manager
 
 

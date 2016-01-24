@@ -10,8 +10,13 @@ from kivy.uix.widget import Widget
 """This module contains the code to connect to the high scores database and it can add new users to the database
    and display scores"""
 
+
 class LeaderBoardLayout(Widget):
     def __init__(self, **kwargs):
+        """ Creates the buttons, text inputs and labels to be used by the other functions
+        :param kwargs:
+        :return:
+        """
         super(LeaderBoardLayout, self).__init__(**kwargs)
         self.choice_button = Button(text="Get results")
         self.results_label = Label(text="High scores", font_size='20sp')
@@ -24,6 +29,9 @@ class LeaderBoardLayout(Widget):
         self.selected_url = "None"
 
     def create_layout(self):
+        """Adds the objects created in __init__ to a GridLayout and creates a drop down
+        :return:
+        """
         self.choice_button.bind(on_press=self.callback)
 
         for d in self.drop_down_options:
@@ -39,9 +47,13 @@ class LeaderBoardLayout(Widget):
         return self.layout
 
     def server_results(self, request, results):
+        """ Outputs the request result into a label
+        """
         self.results_label.text = str(results)
 
     def callback(self, event):
+        """Depending on which drop down option was selected a request a URL is
+        chosen to request data from teh server. """
         playername = self.name_input.text[:3]
         self.name_input.text = playername
         self.results_label.text = "Getting scores"
@@ -55,11 +67,12 @@ class LeaderBoardLayout(Widget):
 
         request = UrlRequest(self.selected_url, self.server_results)
 
-"""
+
 class LeaderBoardApp(App):
     def build(self):
         making_layout = LeaderBoardLayout()
         the_layout = making_layout.create_layout()
         return the_layout
 
-LeaderBoardApp().run()"""
+# Line 66 runs the leader board as a standalone app when uncommented
+# LeaderBoardApp().run()
