@@ -12,8 +12,6 @@ from kivy.uix.label import Label
 from kivy.core.audio import SoundLoader
 from kivy.uix.button import Button
 from kivy.network.urlrequest import UrlRequest
-from kivy.uix.boxlayout import BoxLayout
-from kivy.uix.gridlayout import GridLayout
 
 '''
 Set the location and names for each of the sounds.
@@ -27,7 +25,6 @@ Create the main menu and add the background, ground and label.
 Super makes sure the widget is initialised.
 '''
 class Menu(Widget):
-
     def __init__(self):
         super(Menu, self).__init__()
         self.add_widget(Sprite(source="Resources/images/metal_background.png"))
@@ -35,7 +32,6 @@ class Menu(Widget):
         self.add_widget(Ground(source="Resources/images/metal_ground.png"))
         self.add_widget(Label(center=self.center, text="METAL" + "\n" + " GEAR" + "\n" + " OWL"))
         self.add_widget(Label(pos=(self.center_x-44, self.center_y-140), text="Tap to start"))
-
 
     '''
     When the user pressed down on touch screen or mouse click remove the main menu widget and add the game widget.
@@ -45,54 +41,31 @@ class Menu(Widget):
         parent.remove_widget(self)
         parent.add_widget(Game())
 
-class Highscores(Widget):
-    def __init__(self):
-        #super(Highscores, self).__init__()
-        layout = GridLayout(rows=3)
-        btn = Button(text='Button', font_size=120)
-        btn.bind(on_press=self.callback)
-        self.label = Label(text="?", font_size='14sp')
-        layout.add_widget(btn)
-        layout.add_widget(self.label)
-        return layout
-
-    def got_database(self, request, results):
-        self.label.text = results
-
-    def callback(self, event):
-        request = UrlRequest('http://bsccg03.ga.fal.io/?request=top_score', self.got_database)
-
+'''
+User database to get highscores.
+'''
 class Scores(Widget):
-
     def __init__(self):
         super(Scores, self).__init__()
         self.add_widget(Sprite(source="Resources/images/metal_background.png"))
         self.size = self.children[0].size
 
-        #self.btn = Button(pos=(self.center_x-120, self.center_y+90), text="Get Highscore", font_size=4, size=(240,50))
-        #self.btn.bind(on_press=self.callback_top_score)
-        #self.add_widget(self.btn)
-
-
         self.add_widget(Sprite(source="Resources/images/metal_background.png"))
         self.add_widget(Ground(source="Resources/images/metal_ground.png"))
 
+        '''
+        Top score button display.
+        '''
         self.btn_top_score = Button(pos=(self.center_x-120, self.center_y+90), text="Get Highscore", font_size=4, size=(240,50))
         self.btn_top_score.bind(on_press=self.callback_top_score)
         self.add_widget(self.btn_top_score)
 
+        '''
+        Top scores button display.
+        '''
         self.btn_top_scores = Button(pos=(self.center_x-120, self.center_y+40), text="Get Top 10", font_size=4, size=(240,50))
         self.btn_top_scores.bind(on_press=self.callback_top_scores)
         self.add_widget(self.btn_top_scores)
-
-        self.btn_next = Button(pos=(self.center_x-120, self.center_y+40), text="Next", font_size=4, size=(240,50))
-        self.btn_next.bind(on_press=self.change)
-        self.add_widget(self.btn_next)
-
-        '''
-        self.label_top_score=Label(pos=(self.center_x-40, self.center_y+90), text="Doesn't work", font_size='14sp')
-        self.add_widget(self.label_top_score)
-        '''
 
         #first_name_top_score
         self.label_top_scores_first=Label(pos=(self.center_x-140, self.center_y-90), text="", font_size='14sp')
@@ -106,12 +79,33 @@ class Scores(Widget):
         self.label_top_scores_score=Label(pos=(self.center_x+40, self.center_y-90), text="", font_size='14sp')
         self.add_widget(self.label_top_scores_score)
 
+        '''
+        Menu screen button display.
+        '''
+        self.btn_menu = Button(pos=(self.center_x-120, self.center_y-190), text="Main Menu", font_size=4, size=(240,50))
+        self.btn_menu.bind(on_press=self.change)
+        self.add_widget(self.btn_menu)
+
+    '''
+    Change the list of buttons displayed.
+    '''
+    def change(self, event):
+        parent = self.parent
+        parent.remove_widget(self)
+        parent.add_widget(Menu())
+
+    '''
+    For top score get the results from the database.
+    '''
     def got_database_top_score(self, request, results):
         self.btn_top_score.text=results
 
     def callback_top_score(self, event):
         request = UrlRequest('http://bsccg03.ga.fal.io/?request=top_score', self.got_database_top_score)
 
+    '''
+    For top 10 scores get the results from the database.
+    '''
     def got_database_top_scores(self, request, results):
         print(results)
 
@@ -129,7 +123,6 @@ class Scores(Widget):
         #score
         score="\n".join(str(result[2]) for result in parse_json)
         self.label_top_scores_score.text=score
-
 
     def callback_top_scores(self, event):
         request = UrlRequest('http://bsccg03.ga.fal.io/?request=top_scores', self.got_database_top_scores)
@@ -149,15 +142,16 @@ The top of the image is 5.5 x the size of the player.
 class Pipe(Widget):
     def __init__(self, pos):
         super(Pipe, self).__init__(pos=pos)
+        distance_y= 90
+        increase_distance=40
         self.top_image = Sprite(source="Resources/images/spike_top.png")
-        self.top_image.pos = (self.x, self.y + 5.5 * 24)
+        self.top_image.pos = (self.x, self.y + distance_y)
         self.add_widget(self.top_image)
         self.bottom_image = Sprite(source="Resources/images/spike_bottom.png")
-        self.bottom_image.pos = (self.x, self.y - 340)#- self.bottom_image.height)
+        self.bottom_image.pos = (self.x, self.y - self.top_image.height - increase_distance)
         self.add_widget(self.bottom_image)
         self.width = self.bottom_image.width
-        #self.width = self.top_image.width
-        self.scored = False
+
     '''
     Update the spikes and moves them 2 pixels to the left.
     Set the top spike and bottom spike as the new x position.
@@ -166,7 +160,6 @@ class Pipe(Widget):
     def update(self):
         self.x -=  2
         self.top_image.x = self.bottom_image.x = self.x
-        #self.bottom_image.x = self.x
         if self.right < 0:
             self.parent.remove_widget(self)
 
@@ -184,7 +177,6 @@ class Pipes(Widget):
         self.add_pipe -= dt
         if self.add_pipe < 0:
             y = random.randint(self.y + 50, self.height - 144)
-            #x=self.width
             x = random.randint(self.width, self.width + 40)
             self.add_widget(Pipe(pos=(x, y)))
             self.add_pipe = random.uniform(0.5,4.0)
@@ -201,6 +193,7 @@ class Background(Widget):
         self.size = self.image.size
         self.image_dupe = Sprite(source=source, x=self.width)
         self.add_widget(self.image_dupe)
+        self.scored = False
 
     '''
     Update the image and the duplicate by moving 2 pixels to the left.
@@ -224,7 +217,6 @@ class Bird(Sprite):
         super(Bird, self).__init__(source="atlas://Resources/images/owl_anim/wing-up", pos=pos)
         self.velocity_y = 0
         self.gravity = -.3
-        #self.grounded = False
 
     '''
     The velocity and gravity are added to make the combined direction of the y axis.
@@ -287,7 +279,6 @@ class Game(Widget):
         self.add_widget(self.bird)
         Clock.schedule_interval(self.update, 1.0/60.0)
         self.game_over = False
-        #self.grounded = False
         self.score = 0
 
     '''
@@ -297,21 +288,10 @@ class Game(Widget):
         if self.game_over:
             return
 
-        #if self.grounded:
-            #return
-
         self.background.update()
         self.bird.update()
         self.ground.update()
         self.pipes.update(dt)
-
-
-        #if self.bird.collide_widget(self.ground):
-            #self.bird.y = 40
-
-
-        #if self.bird.collide_widget(self.ground):
-            #self.game_over = True
 
         '''
         If the bird is less than 40 in the y axis, which is the level of the ground, then set the y to 40.
@@ -324,19 +304,23 @@ class Game(Widget):
             self.bird.top = self.height-44
 
         '''
+        When the background x position reaches 0 then increase the score by 1.
+        '''
+        if self.background.image.x == 0:
+            self.background.scored = True
+            self.score += 1
+            self.score_label.text = str(self.score) + " m"
+            sfx_score.play()
+
+        '''
         If the player collides with the spikes then set game over to true.
         If the spikes goes past the player then set scored to true and add to score.
         '''
         for pipe in self.pipes.children:
             if pipe.top_image.collide_widget(self.bird):
                 self.game_over = True
-            if pipe.bottom_image.collide_widget(self.bird): #was elif
+            if pipe.bottom_image.collide_widget(self.bird):
                 self.game_over = True
-            elif not pipe.scored and pipe.right < self.bird.x:
-                pipe.scored = True
-                self.score += 1
-                self.score_label.text = str(self.score) + " m"
-                #sfx_score.play()
 
         '''
         If game over is true then change opacity of game over label to 1 and play music.
@@ -353,9 +337,7 @@ class Game(Widget):
     def _on_touch_down(self, *ignore):
         parent = self.parent
         parent.remove_widget(self)
-        #parent.add_widget(Highscores())
         parent.add_widget(Scores())
-        #parent.add_widget(Menu())
 
 '''
 This is the game app.
