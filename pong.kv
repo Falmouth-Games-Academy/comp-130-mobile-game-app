@@ -9,14 +9,7 @@
         Ellipse:
             pos: self.pos
             size: self.size
-<Bees>
-    size: 20, 20
-    canvas:
-        Color:
-            rgba:1,0,1,1
-        Rectangle:
-            pos:self.pos
-            size:self.size
+
 <PongPaddle>:
     size: 25, 200
     canvas:
@@ -69,8 +62,7 @@
     PongPaddle:
         id: player_left
 
-    Bees:
-        id: Bees
+
     PongPaddle:
         id: player_right
         x: root.width-self.width
