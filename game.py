@@ -29,6 +29,8 @@ class PongPaddle(Widget):
             vel = bounced * 1.2
             ball.velocity = vel.x, vel.y + offset
 
+
+
 #declaring the pong ball class
 class PongBall(Widget):
     #velocity x is horizontal speed.
@@ -40,13 +42,17 @@ class PongBall(Widget):
     def move(self):
         self.pos = Vector(*self.velocity) + self.pos
 
+
+
 #declaring the Bees class
 class Bees(Widget):#setting velocity variables for Bees
     velocity_x = NumericProperty(0)
     velocity_y = NumericProperty(0)
-    def move(self):
-        self.x = self.x + self.velocity_x
-        self.y = self.y + self.velocity_y
+    velocity = ReferenceListProperty(velocity_x, velocity_y)
+    def bmove(self):
+        self.pos = Vector(*self.velocity) + self.pos
+
+
 
 #declaring the end of game button
 class endGameButton(Button):
@@ -55,26 +61,36 @@ class endGameButton(Button):
         self.font_size = Window.width*0.2
 
 
+
+
 #declaring the pong game class
 class PongGame(Widget):
     randprob = 1700 #setting the random probability to 1700
     ball = ObjectProperty(None)
     player2 = ObjectProperty(None)
     bee = ObjectProperty(None)
+
+
     #This is how the ball resets and serves the ball after.
     def serve_ball(self, vel=(4, 0)):
         self.ball.center = self.center#serves ball from center.
         self.ball.velocity = vel
 
-    def add_Bee(self): #Adding bees in while the game is running
+    def serve_bee(self,vel=(3,0)):
+        self.ball.center = self.center#serves bee from left
+        self.ball.velocity = vel
 
-        tempBee = Bees
-        posY = random.randint(1,14)
-        posY = posY*Window.height*.0625
 
-        tempBee.y = posY
-        tempBee.velocity_y = 0
-        tempBee.velocity_x = 20
+
+    #def add_Bee(self): #Adding bees in while the game is running
+#
+ #       tempBee = Bees
+  #      posY = random.randint(1,14)
+   #     posY = posY*Window.height*.0625
+#
+ #       tempBee.y = posY
+  #      tempBee.velocity_y = 0
+   #     tempBee.velocity_x = 20
 
 
 
@@ -84,26 +100,27 @@ class PongGame(Widget):
         def restartButton(obj):
             print 'Trying again'
         endGameButton.size = (Window.width*.3,Window.width*.1)
-        endGameButton.pos = Window.width*0.5-restartButton.width/2, Window.height*0.5
-        endGameButton.bind(on_release=restartButton)
-        self.parent.add_widget(endGameButton)
+
+
+
 
 
     def update(self, dt):
         self.ball.move()
 
-        simonSays = random.randint(1,1800)
-        if simonSays > self.randprob:
-            self.add_Bee()
-            if self.randprob <900:
-                    self.randprob=900
-            self.randprob = self.randprob +2
+       # simonSays = random.randint(1,1800)
+        #if simonSays > self.randprob:
+         #   self.add_Bee()
+          #  if self.randprob <900:
+           #         self.randprob=900
+            #self.randprob = self.randprob +2
 
         #bounce of puppet
         self.player2.bounce_ball(self.ball)
 
         #bounce ball off bottom or top
         if (self.ball.y < self.y) or (self.ball.top > self.top):
+            self.ball.velocity_y *= -1
             self.ball.velocity_y *= -1
 
         #went of to a bounces back left side
@@ -138,7 +155,7 @@ class PongApp(App):
     def build(self):
         game = PongGame()
         game.serve_ball()
-        game.add_Bee()
+        game.serve_bee()
         Clock.schedule_interval(game.update, 1.0 / 60.0)
         return game
 
